@@ -2,8 +2,10 @@ nextflow.enable.dsl=2
 
 
 process pseudochrom {
+    tag "${id}"
+
     input:
-    path(input)
+    tuple val(id), path(input)
     
     output:
     path "${id}.pc.fa", emit: pc

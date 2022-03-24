@@ -9,6 +9,7 @@ workflow {
     
     Channel
         .fromPath( params.genomes )
+        .map { file -> tuple(file.baseName, file) }
         .set { genomes_ch }
 
     mmseqs_db = file(params.mmseqs_db, checkIfExists: true)
