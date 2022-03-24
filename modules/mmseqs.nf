@@ -28,7 +28,6 @@ process mmseqs_easy_taxonomy {
     input:
     path(input)
     path(mmseqs_db)
-    path(mmseqs_db_dir)
 
     output:
     path "${id}_lca.tsv", emit: lca
