@@ -2,7 +2,7 @@
 
 nextflow.enable.dsl=2
 
-include { mmseqs_db_download; mmseqs_easy_taxonomy } from './modules/mmseqs'
+include { mmseqs_easy_taxonomy } from './modules/mmseqs'
 include { pseudochrom } from './modules/utils'
 
 workflow {
