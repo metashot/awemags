@@ -8,7 +8,7 @@ process pseudochrom {
     tuple val(id), path(input)
     
     output:
-    path "${id}.pc.fa", emit: pc
+    tuple val(id), path ("${id}.pc.fa"), emit: pc
     
     script:   
     """

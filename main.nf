@@ -17,8 +17,7 @@ workflow {
     if (!params.contigs) {
         pseudochrom(genomes_ch)
         input_ch = pseudochrom.out.pc
-    }
-    else {
+    } else {
         input_ch = genomes_ch
     }
 
