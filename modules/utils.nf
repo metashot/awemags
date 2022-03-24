@@ -12,6 +12,6 @@ process pseudochrom {
     
     script:   
     """
-    python3 pseudochrom.py ${input} ${id}.pc.fa
+    pseudochrom.py ${input} ${id}.pc.fa
     """
 }
