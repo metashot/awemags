@@ -29,5 +29,5 @@ workflow {
             storeDir: "${params.outdir}/mmseqs",
             newLine: true)
 
-    metaeuk_easy_predict(genomes_ch, mmseqs_db)
+    //metaeuk_easy_predict(genomes_ch, mmseqs_db)
 }
