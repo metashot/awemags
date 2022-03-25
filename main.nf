@@ -14,7 +14,7 @@ workflow {
         .set { genomes_ch }
 
     mmseqs_db = file(params.mmseqs_db, checkIfExists: true)
-    mmseq_db_dir = file(mmseqs_db.parent, type='dir')
+    mmseq_db_dir = mmseqs_db.parent
     mmseq_db_name = mmseqs_db.name
     
     if (!params.contigs) {
