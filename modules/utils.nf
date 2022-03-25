@@ -1,17 +1,17 @@
 nextflow.enable.dsl=2
 
 
-process pseudochrom {
+process pseudochr {
     tag "${id}"
 
     input:
     tuple val(id), path(input)
     
     output:
-    tuple val(id), path ("${id}.pc.fa"), emit: pc
+    tuple val(id), path ("${id}.pseudochr.fa"), emit: pseudochr
     
     script:   
     """
-    pseudochrom.py ${input} ${id}.pc.fa
+    pseudochr.py ${input} ${id}.pseudochr.fa
     """
 }

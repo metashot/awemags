@@ -1,27 +1,25 @@
 nextflow.enable.dsl=2
 
 
-process mmseqs_easy_taxonomy {
+process metaeuk_easy_predict {
     tag "${id}"
     
-    publishDir "${params.outdir}/mmseqs/${id}" , mode: 'copy'
+    publishDir "${params.outdir}/metaeuk/${id}" , mode: 'copy'
 
     input:
     tuple val(id), path(input)
     path(mmseqs_db)
 
     output:
-    path "${id}_lca.tsv", emit: lca
-    path "${id}_*"
+    path "${id}.fas", emit: prot
+    path "${id}*"
        
     script:
     task_memory_GB = Math.floor(0.7 * task.memory.toGiga()) as int
     """
-    mmseqs easy-taxonomy \
-        --tax-lineage 1 \
-        --lca-ranks superkingdom,kingdom,phylum,class,order,family,genus,species \
+    metaeuk easy-predict \
         --threads ${task.cpus} \
-        --split-memory-limit ${task_memory_GB}G \ 
+        --split-memory-limit ${task_memory_GB}G \
         ${input} \
         ${mmseqs_db} \
         ${id} \
