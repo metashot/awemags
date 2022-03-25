@@ -9,6 +9,7 @@ process mmseqs_easy_taxonomy {
     input:
     tuple val(id), path(input)
     path(mmseqs_db)
+    path(mmseqs_db_dir)
 
     output:
     path "${id}_lca.tsv", emit: lca

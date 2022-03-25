@@ -14,7 +14,8 @@ workflow {
         .set { genomes_ch }
 
     mmseqs_db = file(params.mmseqs_db, checkIfExists: true)
-    
+    mmseq_db_dir = mmseqs_db.parent
+
     if (!params.contigs) {
         pseudochr(genomes_ch)
         pseudochr_ch = pseudochr.out.pseudochr
@@ -22,7 +23,7 @@ workflow {
         pseudochr_ch = genomes_ch
     }
 
-    mmseqs_easy_taxonomy(pseudochr_ch, mmseqs_db)
+    mmseqs_easy_taxonomy(pseudochr_ch, mmseqs_db, mmseq_db_dir)
     mmseqs_lca_ch = mmseqs_easy_taxonomy.out.lca
         .collectFile(
             name:'mmseqs_lca.txt', 
