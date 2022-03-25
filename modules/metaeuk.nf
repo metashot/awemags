@@ -7,21 +7,23 @@ process metaeuk_easy_predict {
     publishDir "${params.outdir}/metaeuk/${id}" , mode: 'copy'
 
     input:
-    tuple val(id), path(input)
-    path(mmseqs_db)
+    ttuple val(id), path(input)
+    path(mmseqs_db_dir)
+    val(mmseq_db_name)
 
     output:
     path "${id}.fas", emit: prot
     path "${id}*"
        
     script:
+    db_name = mmseqs_db_dir / mmseq_db_name
     task_memory_GB = Math.floor(0.7 * task.memory.toGiga()) as int
     """
     metaeuk easy-predict \
         --threads ${task.cpus} \
         --split-memory-limit ${task_memory_GB}G \
         ${input} \
-        ${mmseqs_db} \
+        ${db_name} \
         ${id} \
         tmp
     

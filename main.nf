@@ -29,7 +29,7 @@ workflow {
         .collectFile(
             name:'mmseqs_lca.txt', 
             storeDir: "${params.outdir}/mmseqs",
-            newLine: true)
+            newLine: false)
 
-    //metaeuk_easy_predict(genomes_ch, mmseqs_db)
+    metaeuk_easy_predict(genomes_ch, mmseq_db_dir, mmseq_db_name)
 }
