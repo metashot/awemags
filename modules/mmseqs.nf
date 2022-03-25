@@ -21,7 +21,7 @@ process mmseqs_easy_taxonomy {
         --tax-lineage 1 \
         --lca-ranks superkingdom,kingdom,phylum,class,order,family,genus,species \
         --threads ${task.cpus} \
-        --split-memory-limit ${task_memory_GB}G \ 
+        --split-memory-limit ${task_memory_GB}G \
         ${input} \
         ${mmseqs_db} \
         ${id} \
