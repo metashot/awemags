@@ -7,7 +7,7 @@ process metaeuk_easy_predict {
     publishDir "${params.outdir}/metaeuk/${id}" , mode: 'copy'
 
     input:
-    ttuple val(id), path(input)
+    tuple val(id), path(input)
     path(mmseqs_db_dir)
     val(mmseq_db_name)
 
