@@ -2,10 +2,12 @@
 
 nextflow.enable.dsl=2
 
+include { busco } from './modules/busco'
+include { statswrapper } from './modules/bbtools'
 include { mmseqs_db_download; mmseqs_easy_taxonomy } from './modules/mmseqs'
 include { metaeuk_easy_predict } from './modules/metaeuk'
 include { eggnog_db_download; eggnog_mapper } from './modules/eggnog_mapper'
-include { pseudochr; merge_eggnog_mapper } from './modules/utils'
+include { genome_info; genome_filter; pseudochr; merge_eggnog_mapper } from './modules/utils'
 
 workflow {
     
