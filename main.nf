@@ -6,7 +6,7 @@ include { mmseqs_db_download; mmseqs_easy_taxonomy } from './modules/mmseqs'
 include { metaeuk_easy_predict } from './modules/metaeuk'
 include { eggnog_db_download; eggnog_mapper } from './modules/eggnog_mapper'
 include { kofamscan } from './modules/kofamscan'
-include { pseudochr, kofamscan_db_download; merge_eggnog_mapper; merge_kofamscan } from './modules/utils'
+include { pseudochr; kofamscan_db_download; merge_eggnog_mapper; merge_kofamscan } from './modules/utils'
 
 workflow {
     
