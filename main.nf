@@ -49,7 +49,7 @@ workflow {
     }
 
     // eggNOG
-    if ( params.run_eggnog ) {
+    if ( !params.skip_eggnog ) {
         if (params.eggnog_db == 'none') {
             eggnog_db_download()
             eggnog_db = eggnog_db_download.out.eggnog_db
