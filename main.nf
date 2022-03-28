@@ -18,27 +18,22 @@ workflow {
 
     // MMseqs2 database
     if (!(params.skip_taxonomy && params.skip_genepred)) {
-        if (params.mmseq_db == 'none') {
+        if (params.mmseqs_db == 'none') {
             mmseqs_db_download()
-            mmseq_db_dir = mmseqs_db_download.out.mmseqs_db
-            mmseq_db_name = "db"
+            mmseqs_db_dir = mmseqs_db_download.out.mmseqs_db
+            mmseqs_db_name = "db"
         }
         else {
             mmseqs_db = file(params.mmseqs_db, checkIfExists: true)
-            mmseq_db_dir = mmseqs_db.parent
-            mmseq_db_name = mmseqs_db.name
+            mmseqs_db_dir = mmseqs_db.parent
+            mmseqs_db_name = mmseqs_db.name
         }
     }
 
     // MMseq2 taxonomy
     if ( !params.skip_taxonomy ) {
-        if (!params.contigs) {
-            pseudochr(genomes_ch)
-            pseudochr_ch = pseudochr.out.pseudochr
-        } else {
-            pseudochr_ch = genomes_ch
-        }
-
+        pseudochr(genomes_ch)
+        pseudochr_ch = pseudochr.out.pseudochr
         mmseqs_easy_taxonomy(pseudochr_ch, mmseq_db_dir, mmseq_db_name)
         mmseqs_lca_ch = mmseqs_easy_taxonomy.out.lca
             .collectFile(
