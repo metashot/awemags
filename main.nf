@@ -34,7 +34,7 @@ workflow {
     if ( !params.skip_taxonomy ) {
         pseudochr(genomes_ch)
         pseudochr_ch = pseudochr.out.pseudochr
-        mmseqs_easy_taxonomy(pseudochr_ch, mmseq_db_dir, mmseq_db_name)
+        mmseqs_easy_taxonomy(pseudochr_ch, mmseqs_db_dir, mmseqs_db_name)
         mmseqs_lca_ch = mmseqs_easy_taxonomy.out.lca
             .collectFile(
                 name:'mmseqs_lca.txt', 
@@ -44,7 +44,7 @@ workflow {
 
     // MetaEuk
     if ( (!params.skip_genepred) || (!params.skip_eggnog) || params.run_kofamscan) {
-        metaeuk_easy_predict(genomes_ch, mmseq_db_dir, mmseq_db_name)
+        metaeuk_easy_predict(genomes_ch, mmseqs_db_dir, mmseqs_db_name)
         prot_ch = metaeuk_easy_predict.out.prot
     }
 
