@@ -1,6 +1,21 @@
 nextflow.enable.dsl=2
 
 
+process mmseqs_db_download {
+
+    publishDir "${params.outdir}/dbs" , mode: 'copy'
+
+    output:
+    path 'mmseqs_db', type: 'dir', emit: mmseqs_db
+
+    script:
+    """
+    mkdir mmseqs_db
+    mmseqs databases ${mmseq_db_name} mmseqs_db/db tmp
+    rm -rf tmp
+    """
+}
+
 process mmseqs_easy_taxonomy {
     tag "${id}"
     
