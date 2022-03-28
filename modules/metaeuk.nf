@@ -12,7 +12,7 @@ process metaeuk_easy_predict {
     val(mmseq_db_name)
 
     output:
-    path "${id}.fas", emit: prot
+    tuple val(id), path ("${id}.fas"), emit: prot
     path "${id}*"
        
     script:
