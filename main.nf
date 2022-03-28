@@ -5,8 +5,7 @@ nextflow.enable.dsl=2
 include { mmseqs_db_download; mmseqs_easy_taxonomy } from './modules/mmseqs'
 include { metaeuk_easy_predict } from './modules/metaeuk'
 include { eggnog_db_download; eggnog_mapper } from './modules/eggnog_mapper'
-include { kofamscan } from './modules/kofamscan'
-include { pseudochr; kofamscan_db_download; merge_eggnog_mapper; merge_kofamscan } from './modules/utils'
+include { pseudochr; merge_eggnog_mapper } from './modules/utils'
 
 workflow {
     
@@ -43,7 +42,7 @@ workflow {
     }
 
     // MetaEuk
-    if ( (!params.skip_genepred) || (!params.skip_eggnog) || params.run_kofamscan) {
+    if ( (!params.skip_genepred) || (!params.skip_eggnog)) {
         metaeuk_easy_predict(genomes_ch, mmseqs_db_dir, mmseqs_db_name)
         prot_ch = metaeuk_easy_predict.out.prot
     }
@@ -61,20 +60,5 @@ workflow {
 
         eggnog_mapper(prot_ch, eggnog_db)
         merge_eggnog_mapper(eggnog_mapper.out.annotations.collect())
-    }
-    
-    // KofamScan 
-    if ( params.run_kofamscan ) {
-        if (params.kofamscan_db == 'none') {
-            kofamscan_db_download()
-            kofamscan_db = kofamscan_db_download.out.kofamscan_db
-        }
-        else {
-            kofamscan_db = file(params.kofamscan_db, type: 'dir', 
-                checkIfExists: true)
-        }
-
-        kofamscan(prot_ch, kofamscan_db)
-        merge_kofamscan(kofamscan.out.hits.collect())
     }
 }
