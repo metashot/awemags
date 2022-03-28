@@ -11,7 +11,7 @@ process mmseqs_db_download {
     script:
     """
     mkdir mmseqs_db
-    mmseqs databases ${mmseq_db_name} mmseqs_db/db tmp
+    mmseqs databases ${params.mmseq_db_name} mmseqs_db/db tmp
     rm -rf tmp
     """
 }
