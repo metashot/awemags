@@ -14,9 +14,24 @@ workflow {
         .map { file -> tuple(file.baseName, file) }
         .set { genomes_ch }
 
+    if ( !params.skip_busco ) {
+        lineage = file(params.lineage, type: 'file')
+        busco_db = file(params.busco_db, type: 'dir')
+
+        genomes_only_ch = genomes_ch
+            .map { row -> row[1] }
+
+        busco(genomes_ch, lineage, busco_db)
+        statswrapper(genomes_only_ch.collect())
+        genome_info(busco.out.summary.collect(), statswrapper.out.stats)
+        genome_filter(genome_info.out.table, genomes_only_ch.collect())
+        filtered_ch = genome_filter.out.filtered
+    } else {
+        filtered_ch = genomes_ch
+    }
 
     // MMseqs2 database
-    if (!(params.skip_taxonomy && params.skip_genepred)) {
+    if ( !(params.skip_taxonomy && params.skip_genepred) ) {
         if (params.mmseqs_db == 'none') {
             mmseqs_db_download()
             mmseqs_db_dir = mmseqs_db_download.out.mmseqs_db
@@ -31,7 +46,7 @@ workflow {
 
     // MMseq2 taxonomy
     if ( !params.skip_taxonomy ) {
-        pseudochr(genomes_ch)
+        pseudochr(filtered_ch)
         pseudochr_ch = pseudochr.out.pseudochr
         mmseqs_easy_taxonomy(pseudochr_ch, mmseqs_db_dir, mmseqs_db_name)
         mmseqs_lca_ch = mmseqs_easy_taxonomy.out.lca
@@ -43,7 +58,7 @@ workflow {
 
     // MetaEuk
     if ( (!params.skip_genepred) || (!params.skip_eggnog)) {
-        metaeuk_easy_predict(genomes_ch, mmseqs_db_dir, mmseqs_db_name)
+        metaeuk_easy_predict(filtered_ch, mmseqs_db_dir, mmseqs_db_name)
         prot_ch = metaeuk_easy_predict.out.prot
     }
 
