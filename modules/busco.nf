@@ -12,9 +12,6 @@ process busco {
 
     output:
     path "${id}/*"
-    path "${id}/logs"
-    path "${id}/exit_info.txt", optional: true
-    path "${id}/short_summary.*", optional: true
     path "${id}/short_summary.specific.*.${id}.txt", optional: true, emit: summary
     
 
@@ -59,7 +56,17 @@ process busco {
         ${param_offline} \
         --cpu ${task.cpus}
     BUSCO_EXIT=\$?
-      
+
+    mkdir busco_out
+    find . -maxdepth 3 -type d -name "busco_sequences" -exec cp --parents -R -t busco_out {} +
+    find . -maxdepth 3 -type f -name "missing_busco_list.tsv" -exec cp --parents -t busco_out {} +
+    find . -maxdepth 3 -type f -name "full_table.tsv" -exec cp --parents -t busco_out {} +
+    find . -maxdepth 3 -type f -name "short_summary.txt" -exec cp --parents -t busco_out {} +
+    find . -maxdepth 2 -type f -name "short_summary.*.txt" -exec cp --parents -t busco_out {} +
+    cp --parents -R ${id}/logs busco_out
+    rm -rf ${id}
+    mv busco_out/${id} ${id}
+
     BUSCO_LOG=${id}/logs/busco.log
     if [ "\$BUSCO_EXIT" -eq 1 ] && [ -f \$BUSCO_LOG ]; then
         

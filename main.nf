@@ -28,6 +28,7 @@ workflow {
         genome_info(busco.out.summary.collect(), statswrapper.out.stats)
         genome_filter(genome_info.out.table, genomes_only_ch.collect())
         filtered_ch = genome_filter.out.filtered
+            .map { file -> tuple(file.baseName, file) }
     } else {
         filtered_ch = genomes_ch
     }
