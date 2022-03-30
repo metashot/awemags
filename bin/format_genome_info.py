@@ -126,7 +126,7 @@ genome_info.to_csv(GENOME_INFO, sep='\t', index=False, float_format='%.2f')
 genome_info_drep = genome_info[[
     "Genome",
     "Completeness",
-    "Contamination"]
+    "Contamination"]]
 
 genome_info_drep.rename(columns={
     "Genome": "genome",
