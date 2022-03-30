@@ -64,7 +64,7 @@ process busco {
     find . -maxdepth 3 -type f -name "short_summary.txt" -exec cp --parents -t busco_out {} +
     find . -maxdepth 2 -type f -name "short_summary.*.txt" -exec cp --parents -t busco_out {} +
     cp --parents -R ${id}/logs busco_out
-    rm -rf ${id}
+    rm -rf ${id} busco_downloads
     mv busco_out/${id} ${id}
 
     BUSCO_LOG=${id}/logs/busco.log

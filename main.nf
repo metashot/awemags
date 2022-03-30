@@ -30,6 +30,7 @@ workflow {
         genome_filter(format_genome_info.out.genome_info, genomes_only_ch.collect())
 
         filtered_ch = genome_filter.out.filtered
+            .flatMap()
             .map { file -> tuple(file.baseName, file) }
 
          /* Dereplication */
