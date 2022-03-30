@@ -1,7 +1,7 @@
 nextflow.enable.dsl=2
 
 
-process genome_info {      
+process format_genome_info {      
     publishDir "${params.outdir}" , mode: 'copy' ,
         pattern: 'genome_info.tsv'
 
@@ -10,16 +10,18 @@ process genome_info {
     path(stats)
    
     output:
-    path 'genome_info.tsv', emit: table 
+    path 'genome_info.tsv', emit: genome_info 
+    path 'genome_info_drep.csv', emit: genome_info_drep 
 
     script:
     """
     mkdir summaries_dir
     mv $summaries summaries_dir
-    genome_info.py \
+    format_genome_info.py \
         summaries_dir \
         $stats \
-        genome_info.tsv
+        genome_info.tsv \
+        genome_info_drep.csv
     """
 }
 
@@ -61,6 +63,23 @@ process pseudochr {
     """
 }
 
+process format_mmseqs_lca {
+    publishDir "${params.outdir}" , mode: 'copy'
+
+    input:
+    path(mmseqs_lca)
+    
+    output:
+    path('taxonomy.tsv')
+    
+    script:   
+    """
+    format_mmseqs_lca.py \
+        ${mmseqs_lca} \
+        taxonomy.tsv
+    """
+}
+
 process merge_eggnog_mapper {      
     publishDir "${params.outdir}" , mode: 'copy'
 
@@ -75,3 +94,19 @@ process merge_eggnog_mapper {
     merge_eggnog_mapper.py -i ${annotations}
     """
 }
+
+process derep_info {
+        publishDir "${params.outdir}" , mode: 'copy'
+
+        input:
+        path 'Cdb.csv'
+        path 'Wdb.csv'
+
+        output:
+        path 'derep_info.tsv'
+
+        script:   
+        """
+        derep_info.py Cdb.csv Wdb.csv ${params.ext} derep_info.tsv 
+        """
+    }

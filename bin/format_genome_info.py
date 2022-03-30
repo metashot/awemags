@@ -12,6 +12,7 @@ import pandas as pd
 BUSCO_SUMMARY_DIR=sys.argv[1]
 STATS = sys.argv[2]
 GENOME_INFO=sys.argv[3]
+GENOME_INFO_DREP=sys.argv[4]
 
 
 class BuscoSummary():
@@ -120,3 +121,18 @@ genome_info[["Completeness", "Contamination"]] = \
 genome_info.fillna("NA", inplace=True)
 
 genome_info.to_csv(GENOME_INFO, sep='\t', index=False, float_format='%.2f')
+
+# genome info for dRep
+genome_info_drep = genome_info[[
+    "Genome",
+    "Completeness",
+    "Contamination"]
+
+genome_info_drep.rename(columns={
+    "Genome": "genome",
+    "Completeness":"completeness",
+    "Contamination": "contamination"
+    }, inplace=True)
+
+genome_info_drep.to_csv(GENOME_INFO_DREP, sep=',',
+    index=False)
