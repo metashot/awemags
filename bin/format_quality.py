@@ -11,7 +11,7 @@ import pandas as pd
 
 BUSCO_SUMMARY_DIR=sys.argv[1]
 STATS = sys.argv[2]
-GENOME_INFO=sys.argv[3]
+QUALITY=sys.argv[3]
 GENOME_INFO_DREP=sys.argv[4]
 
 
@@ -90,9 +90,9 @@ stats_df["Genome"] = stats_df["Genome"].apply(os.path.basename)
 stats_df = stats_df.set_index("Genome")
 
 # Concatenate Busco summary and stats
-genome_info = pd.concat([summary_df, stats_df], axis=1, sort=False)
-genome_info['Genome'] = genome_info.index
-genome_info = genome_info[[
+quality_df = pd.concat([summary_df, stats_df], axis=1, sort=False)
+quality_df['Genome'] = quality_df.index
+quality_df = quality_df[[
     "Genome",
     "Completeness",
     "Contamination",
@@ -116,14 +116,14 @@ genome_info = genome_info[[
     "Total"
 ]]
 
-genome_info[["Completeness", "Contamination"]] = \
-    genome_info[["Completeness", "Contamination"]].fillna(0.0)
-genome_info.fillna("NA", inplace=True)
+quality_df[["Completeness", "Contamination"]] = \
+    quality_df[["Completeness", "Contamination"]].fillna(0.0)
+quality_df.fillna("NA", inplace=True)
 
-genome_info.to_csv(GENOME_INFO, sep='\t', index=False, float_format='%.2f')
+quality_df.to_csv(QUALITY, sep='\t', index=False, float_format='%.2f')
 
 # genome info for dRep
-genome_info_drep = genome_info[[
+genome_info_drep = quality_df[[
     "Genome",
     "Completeness",
     "Contamination"]]

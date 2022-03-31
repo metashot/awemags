@@ -1,26 +1,26 @@
 nextflow.enable.dsl=2
 
 
-process format_genome_info {      
+process format_quality {      
     publishDir "${params.outdir}" , mode: 'copy' ,
-        pattern: 'genome_info.tsv'
+        pattern: 'quality.tsv'
 
     input:
     path(summaries)
     path(stats)
    
     output:
-    path 'genome_info.tsv', emit: genome_info 
+    path 'quality.tsv', emit: quality 
     path 'genome_info_drep.csv', emit: genome_info_drep 
 
     script:
     """
     mkdir summaries_dir
     mv $summaries summaries_dir
-    format_genome_info.py \
+    format_quality.py \
         summaries_dir \
         $stats \
-        genome_info.tsv \
+        quality.tsv \
         genome_info_drep.csv
     """
 }
@@ -29,7 +29,7 @@ process genome_filter {
     publishDir "${params.outdir}" , mode: 'copy'
 
     input:
-    path 'genome_info.tsv'
+    path 'quality.tsv'
     path(genomes)
 
     output:
@@ -40,7 +40,7 @@ process genome_filter {
     mkdir genomes_dir
     mv $genomes genomes_dir
     genome_filter.py \
-        genome_info.tsv \
+        quality.tsv \
         genomes_dir \
         filtered \
         ${params.min_completeness} \

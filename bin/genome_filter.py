@@ -8,7 +8,7 @@ import shutil
 import pandas as pd
 
 
-GENOME_INFO = sys.argv[1]
+QUALITY = sys.argv[1]
 INPUT_GENOMES_DIR = sys.argv[2]
 FILTERED_GENOMES_DIR = sys.argv[3]
 MIN_COMPLETENESS = float(sys.argv[4])
@@ -25,7 +25,7 @@ try:
 except FileExistsError:
     pass
 
-genome_info_df = pd.read_table(GENOME_INFO, 
+quality_df = pd.read_table(QUALITY, 
     sep='\t', header=0, engine='python')
 
-genome_info_df.apply(filter, axis=1)
+quality_df.apply(filter, axis=1)

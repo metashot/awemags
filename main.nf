@@ -8,7 +8,7 @@ include { drep_with_genomeinfo; drep_without_genomeinfo } from './modules/drep'
 include { mmseqs_db_download; mmseqs_easy_taxonomy } from './modules/mmseqs'
 include { metaeuk_easy_predict } from './modules/metaeuk'
 include { eggnog_db_download; eggnog_mapper } from './modules/eggnog_mapper'
-include { format_genome_info; genome_filter; pseudochr; format_mmseqs_lca; merge_eggnog_mapper; derep_info} from './modules/utils'
+include { format_quality; genome_filter; pseudochr; format_mmseqs_lca; merge_eggnog_mapper; derep_info} from './modules/utils'
 
 workflow {
     
@@ -17,26 +17,22 @@ workflow {
         .map { file -> tuple(file.baseName, file) }
         .set { genomes_ch }
 
-    /* BUSCO and filtering */
+    /* Filtering */
     if ( !params.skip_filtering ) {
         lineage = file(params.lineage, type: 'file')
         busco_db = file(params.busco_db, type: 'dir')
-
-        genomes_only_ch = genomes_ch
-            .map { row -> row[1] }
-
         busco(genomes_ch, lineage, busco_db)
         statswrapper(genomes_only_ch.collect())
-        format_genome_info(busco.out.summary.collect(), statswrapper.out.stats)
-        genome_filter(format_genome_info.out.genome_info,
-            genomes_only_ch.collect())
+        format_quality(busco.out.summary.collect(), statswrapper.out.stats)
+        genome_filter(format_quality.out.quality,
+            genomes_ch.map { row -> row[1] }.collect())
 
         filtered_ch = genome_filter.out.filtered
             .flatMap()
             .map { file -> tuple(file.baseName, file) }
 
         if ( !params.skip_dereplication ) {
-            drep_with_genomeinfo(format_genome_info.out.genome_info_drep,
+            drep_with_genomeinfo(format_quality.out.genome_info_drep,
                 filtered_ch.map { row -> row[1] }.collect())
             derep_info(drep_with_genomeinfo.out.cdb,
                 drep_with_genomeinfo.out.wdb)
