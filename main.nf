@@ -22,7 +22,7 @@ workflow {
         lineage = file(params.lineage, type: 'file')
         busco_db = file(params.busco_db, type: 'dir')
         busco(genomes_ch, lineage, busco_db)
-        statswrapper(genomes_only_ch.collect())
+        statswrapper(genomes_ch.map { row -> row[1] }.collect())
         format_quality(busco.out.summary.collect(), statswrapper.out.stats)
         genome_filter(format_quality.out.quality,
             genomes_ch.map { row -> row[1] }.collect())
