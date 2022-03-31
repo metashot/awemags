@@ -4,7 +4,7 @@ nextflow.enable.dsl=2
 
 include { busco } from './modules/busco'
 include { statswrapper } from './modules/bbtools'
-include { drep } from './modules/drep'
+include { drep_with_genomeinfo; drep_without_genomeinfo } from './modules/drep'
 include { mmseqs_db_download; mmseqs_easy_taxonomy } from './modules/mmseqs'
 include { metaeuk_easy_predict } from './modules/metaeuk'
 include { eggnog_db_download; eggnog_mapper } from './modules/eggnog_mapper'
