@@ -1,6 +1,6 @@
 nextflow.enable.dsl=2
 
-process drep {
+process drep_with_genomeinfo {
     publishDir "${params.outdir}" , mode: 'copy' ,
         pattern: 'filtered_repr/*'
 
@@ -35,3 +35,40 @@ process drep {
     mv drep/dereplicated_genomes filtered_repr
     """
 }
+
+process drep_without_genomeinfo {
+    publishDir "${params.outdir}" , mode: 'copy' ,
+        pattern: 'filtered_repr/*'
+
+    publishDir "${params.outdir}" , mode: 'copy' ,
+        pattern: 'drep/{data_tables,figures,log}/*'
+
+    input:
+    path(genomes)
+
+    output:
+    path 'filtered_repr/*'
+    path 'drep/{data_tables,figures,log}/*'
+    path 'drep/data_tables/Cdb.csv', emit: cdb
+    path 'drep/data_tables/Wdb.csv', emit: wdb
+
+    script:   
+    """
+    mkdir genomes_dir
+    mv $genomes genomes_dir
+    dRep dereplicate \
+        drep \
+        --ignoreGenomeQuality \
+        -ms 5000 \
+        -p ${task.cpus} \
+        -nc ${params.min_overlap} \
+        -sa ${params.ani_thr} \
+        -sizeW 1 \
+        -strW 0 \
+        -N50W 0 \
+        -g genomes_dir/*
+
+    mv drep/dereplicated_genomes filtered_repr
+    """
+}
+

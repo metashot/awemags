@@ -17,6 +17,7 @@ workflow {
         .map { file -> tuple(file.baseName, file) }
         .set { genomes_ch }
 
+    /* BUSCO and filtering */
     if ( !params.skip_filtering ) {
         lineage = file(params.lineage, type: 'file')
         busco_db = file(params.busco_db, type: 'dir')
@@ -27,19 +28,28 @@ workflow {
         busco(genomes_ch, lineage, busco_db)
         statswrapper(genomes_only_ch.collect())
         format_genome_info(busco.out.summary.collect(), statswrapper.out.stats)
-        genome_filter(format_genome_info.out.genome_info, genomes_only_ch.collect())
+        genome_filter(format_genome_info.out.genome_info,
+            genomes_only_ch.collect())
 
         filtered_ch = genome_filter.out.filtered
             .flatMap()
             .map { file -> tuple(file.baseName, file) }
 
-         /* Dereplication */
         if ( !params.skip_dereplication ) {
-            drep(format_genome_info.out.genome_info_drep, genome_filter.out.filtered.collect())
-            derep_info(drep.out.cdb, drep.out.wdb)
+            drep_with_genomeinfo(format_genome_info.out.genome_info_drep,
+                filtered_ch.map { row -> row[1] }.collect())
+            derep_info(drep_with_genomeinfo.out.cdb,
+                drep_with_genomeinfo.out.wdb)
         }
     } else {
         filtered_ch = genomes_ch
+
+        if ( !params.skip_dereplication ) {
+            drep_without_genomeinfo(filtered_ch.map { row -> row[1] }.collect())
+            derep_info(
+                drep_without_genomeinfo.out.cdb,
+                drep_without_genomeinfo.out.wdb)
+        }
     }
 
     // MMseqs2 database
