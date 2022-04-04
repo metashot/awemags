@@ -9,8 +9,7 @@ from sklearn import preprocessing
 
 DREP_CDB = sys.argv[1]
 DREP_WDB = sys.argv[2]
-GENOME_EXT = sys.argv[3]
-DEREP_INFO = sys.argv[4]
+DEREP_INFO = sys.argv[3]
 
 
 drep_cdb_df = pd.read_table(DREP_CDB, sep=',', header=0, engine='python') \
@@ -29,8 +28,5 @@ derep_info_df = derep_info_df[["secondary_cluster", "Representative"]]. \
 
 le = preprocessing.LabelEncoder()
 derep_info_df["Cluster"] = le.fit_transform(derep_info_df["Cluster"])
-
-derep_info_df["Genome"] = \
-    derep_info_df["Genome"].str.replace(r'.{}$'.format(GENOME_EXT), '')
 
 derep_info_df.to_csv(DEREP_INFO, sep='\t', index=False)

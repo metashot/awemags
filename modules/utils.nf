@@ -107,6 +107,6 @@ process derep_info {
 
         script:   
         """
-        derep_info.py Cdb.csv Wdb.csv ${params.ext} derep_info.tsv 
+        derep_info.py Cdb.csv Wdb.csv derep_info.tsv 
         """
     }
