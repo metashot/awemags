@@ -1,9 +1,9 @@
-metashot/aweMAGs is an automated workflow for large-scale microbial **eukaryotic
+metashot/aweMAGs is an automated workflow for **large-scale microbial eukaryotic
 MAGs** (metagenome assembled genomes) analysis. Although aweMAGs has been
 specifically designed for eukaryotic genomes, it can also work on prokaryotic or
 viral MAGs.
 
-Reproducibility is guaranteed by Nextflow and versioned Docker images.
+**Reproducibility** is guaranteed by Nextflow and versioned Docker images.
 
 **Note**: This workflow is not intended for classifying and annotating
 "finished" SAGs (single amplified genomes) or MAGs. The "finished" category is
@@ -13,19 +13,24 @@ editing.
 [MetaShot Home](https://metashot.github.io/)
 
 ## Features
-aweMAGs is a container-enabled Nextflow pipeline for quality assessment,
-dereplication, gene discovery, taxonomic and functional annotation of
-eukariotic MAGS. It can run out-of-the-box on any platform that supports
-Nextflow, Docker or Singularity, including computing clusters or batch
-infrastructures in the cloud. Its main features are 
+aweMAGs is a container-enabled [Nextflow](https://www.nextflow.io/) pipeline for
+quality assessment, dereplication, gene discovery, taxonomic and functional
+annotation of eukariotic MAGs. It can run out-of-the-box on any platform that
+supports Nextflow, [Docker](https://www.docker.com/) or
+[Singularity](https://sylabs.io/singularity), including computing clusters or
+batch infrastructures in the cloud. Main features:
 
-- Completeness, contamination estimates using [BUSCO](https://busco.ezlab.org/);
+- Completeness, contamination estimates and basic assambly statistics using
+  [BUSCO](https://busco.ezlab.org/) and
+  [BBTools](https://jgi.doe.gov/data-and-tools/software-tools/bbtools/);
 - Dereplication with [dRep](https://github.com/MrOlm/drep);
 - Fast taxonomic classification using [MMseqs2 taxonomy](https://github.com/soedinglab/MMseqs2) ;
 - Sensitive reference-based gene discovery with [MetaEuk](https://github.com/soedinglab/metaeuk);
 - Fast functional annotation using [EggNOG-mapper](https://github.com/eggnogdb/eggnog-mapper);
 - Automatic databases download;
 - Summary tables for genome quality, taxonomy predictions and functional annotations.
+
+Each step can be independently skipped.
 
 <img
 src=https://github.com/metashot/awemags/blob/master/docs/images/awemags.png
@@ -157,6 +162,9 @@ requirements](https://metashot.github.io/#system-requirements) for the complete
 list of system requirements options.
 
 ### Memory
+Meta
+
+
 CheckM requires approximately 70 GB of memory. However, if you have only 16 GB
 RAM, a reduced genome tree (`--reduced_tree` option) can also be used (see
 https://github.com/Ecogenomics/CheckM/wiki/Installation#system-requirements).
