@@ -1,10 +1,7 @@
-- [MetaShot Home](https://metashot.github.io/)
-
-metashot/aweMAGs is an automated workflow for large-scale microbial eukaryotic
-MAGs (metagenome assembled genomes) analysis. 
-
-Although aweMAGs has been specifically designed for eukaryotic genomes, it can
-also work on prokaryotic or viral MAGs.
+metashot/aweMAGs is an automated workflow for large-scale microbial **eukaryotic
+MAGs** (metagenome assembled genomes) analysis. Although aweMAGs has been
+specifically designed for eukaryotic genomes, it can also work on prokaryotic or
+viral MAGs.
 
 Reproducibility is guaranteed by Nextflow and versioned Docker images.
 
@@ -13,23 +10,26 @@ Reproducibility is guaranteed by Nextflow and versioned Docker images.
 reserved for genomes that can be assembled with extensive manual review and
 editing.
 
+[MetaShot Home](https://metashot.github.io/)
+
 ## Features
 aweMAGs is a container-enabled Nextflow pipeline for quality assessment,
-dereplication, gene prediction, taxonomic and functional annotation. It can run
-out-of-the-box on any platform that supports Nextflow, Docker or Singularity,
-including computing clusters or batch infrastructures in the cloud.
+dereplication, gene discovery, taxonomic and functional annotation of
+eukariotic MAGS. It can run out-of-the-box on any platform that supports
+Nextflow, Docker or Singularity, including computing clusters or batch
+infrastructures in the cloud. Its main features are 
 
-- Completeness, contamination estimates using BUSCO 
-  [BUSCO](https://busco.ezlab.org/);
-- Dereplication using [dRep](https://github.com/MrOlm/drep).
-- Fast taxonomic classification using MMseqs2;
-- Sensitive reference-based gene discovery using MetaEuk;
-- Fast functional annotation using EggNOG-mapper;
-- Databases can be automatically downloaded.
+- Completeness, contamination estimates using [BUSCO](https://busco.ezlab.org/);
+- Dereplication with [dRep](https://github.com/MrOlm/drep);
+- Fast taxonomic classification using [MMseqs2 taxonomy](https://github.com/soedinglab/MMseqs2) ;
+- Sensitive reference-based gene discovery with [MetaEuk](https://github.com/soedinglab/metaeuk);
+- Fast functional annotation using [EggNOG-mapper](https://github.com/eggnogdb/eggnog-mapper);
+- Automatic databases download;
+- Summary tables for genome quality, taxonomy predictions and functional annotations.
 
 <img
 src=https://github.com/metashot/awemags/blob/master/docs/images/awemags.png
-width="600">
+width="500">
 
 ## Quick start
 
@@ -166,3 +166,4 @@ For each GB of input data the workflow requires approximately 0.5/1 GB for the
 final output and 2/3 GB for the working directory.
 
 
+mmseqs databases UniProtKB/Swiss-Prot outpath/swissprot tmp
