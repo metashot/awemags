@@ -11,7 +11,10 @@ process mmseqs_db_download {
     script:
     """
     mkdir mmseqs_db
-    mmseqs databases ${params.mmseqs_db_name} mmseqs_db/db tmp
+    mmseqs databases \
+        --threads ${task.cpus} \
+        ${params.mmseqs_db_name} \
+        mmseqs_db/db tmp
     rm -rf tmp
     """
 }
