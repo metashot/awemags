@@ -5,6 +5,7 @@ nextflow.enable.dsl=2
 include { busco } from './modules/busco'
 include { statswrapper } from './modules/bbtools'
 include { drep_with_genomeinfo; drep_without_genomeinfo } from './modules/drep'
+include { itsx } from './modules/itsx'
 include { mmseqs_db_download; mmseqs_easy_taxonomy } from './modules/mmseqs'
 include { metaeuk_easy_predict } from './modules/metaeuk'
 include { eggnog_db_download; eggnog_mapper } from './modules/eggnog_mapper'
@@ -46,6 +47,10 @@ workflow {
                 drep_without_genomeinfo.out.cdb,
                 drep_without_genomeinfo.out.wdb)
         }
+    }
+
+    if ( !params.skip_itsx ) {
+        itsx(filtered_ch)
     }
 
     // MMseqs2 database
