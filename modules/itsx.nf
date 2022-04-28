@@ -15,7 +15,7 @@ process itsx {
         script:       
         """
         ITSx \
-            -i ${genomes} \
+            -i ${genome} \
             -o ${id}.itsx \
             --cpu ${task.cpus} \
             --save_regions all \
