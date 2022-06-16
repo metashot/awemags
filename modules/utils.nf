@@ -33,7 +33,7 @@ process genome_filter {
     path(genomes)
 
     output:
-    path 'filtered/*', emit: filtered
+    path 'filtered/*', optional: true, emit: filtered
     
     script:   
     """
