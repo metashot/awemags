@@ -10,6 +10,10 @@ include { mmseqs_db_download; mmseqs_easy_taxonomy } from './modules/mmseqs'
 include { metaeuk_easy_predict } from './modules/metaeuk'
 include { eggnog_db_download; eggnog_mapper } from './modules/eggnog_mapper'
 include { format_quality; genome_filter; pseudochr; format_mmseqs_lca; merge_eggnog_mapper; derep_info} from './modules/utils'
+include { muscle } from './modules/muscle'
+include { trimal } from './modules/trimal'
+include { amas } from './modules/amas'
+include { raxml } from './modules/gubbins'
 
 workflow {
     
@@ -31,6 +35,36 @@ workflow {
         filtered_ch = genome_filter.out.filtered
             .flatMap()
             .map { file -> tuple(file.baseName, file) }
+        
+        /* BUSCO SCG MSA and phylogeneti tree inference */
+        if ( (!params.skip_tree) & (!['auto', 'auto-prok', 'auto-euk'].contains(params.lineage)) ) {
+            busco_genes_ch = filtered_ch
+                .join(busco.out.sgc, by: 0)
+                .map { row -> [ row[0], row[2] ] }
+                .transpose()
+                .map { row -> [ row[1].baseName, row[0], row[1]] }
+                .splitFasta( record: [id: true, seqString: true ], limit: 1)
+                .map {
+                    row -> 
+                    def record = [:]
+                        record.id        = row[1]
+                        record.seqString = row[2].seqString
+                    [ row[0], record ]
+                }
+                .collectFile(storeDir: "${params.outdir}/tree/faa") { 
+                    gene, record ->
+                    [ "${gene}.faa", ">" + record.id + '\n' + record.seqString + '\n' ]
+                }
+                .map { file -> tuple(file.baseName, file) }
+                .filter { gene, file -> file.countFasta() > 1 }
+
+            muscle(busco_genes_ch)
+            trimal(muscle.out.msa)
+            amas(trimal.out.trim_msa.map { row -> row[1] }.collect())
+            concat_msa_ch = amas.out.concat_msa
+                .map { file -> tuple( file, file.countLines() ) }
+            raxml(concat_msa_ch)
+        }
 
         if ( !params.skip_dereplication ) {
             drep_with_genomeinfo(format_quality.out.genome_info_drep,

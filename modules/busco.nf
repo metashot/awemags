@@ -12,8 +12,8 @@ process busco {
 
     output:
     path "${id}/*"
-    path "${id}/short_summary.specific.*.${id}.txt", optional: true, emit: summary
-    
+    path "${id}/${id}_short_summary.txt", optional: true, emit: summary
+    tuple val(id), path("${id}/${id}_busco_sequences/single_copy_busco_sequences/*.faa"), optional: true, emit: sgc
 
     script:
     if( params.lineage == 'auto' ) {
@@ -49,7 +49,7 @@ process busco {
     set +e
     busco \
         -i ${genome} \
-        -o ${id} \
+        -o busco_out \
         -m genome \
         ${param_lineage_dataset} \
         ${param_auto_lineage} \
@@ -57,15 +57,10 @@ process busco {
         --cpu ${task.cpus}
     BUSCO_EXIT=\$?
 
-    mkdir busco_out
-    find . -maxdepth 3 -type d -name "busco_sequences" -exec cp --parents -R -t busco_out {} +
-    find . -maxdepth 3 -type f -name "missing_busco_list.tsv" -exec cp --parents -t busco_out {} +
-    find . -maxdepth 3 -type f -name "full_table.tsv" -exec cp --parents -t busco_out {} +
-    find . -maxdepth 3 -type f -name "short_summary.txt" -exec cp --parents -t busco_out {} +
-    find . -maxdepth 2 -type f -name "short_summary.*.txt" -exec cp --parents -t busco_out {} +
-    cp --parents -R ${id}/logs busco_out
-    rm -rf ${id} busco_downloads
-    mv busco_out/${id} ${id}
+    mkdir ${id}
+    cp -R busco_out/logs ${id}
+
+    ##### Check the errors
 
     BUSCO_LOG=${id}/logs/busco.log
     if [ "\$BUSCO_EXIT" -eq 1 ] && [ -f \$BUSCO_LOG ]; then
@@ -85,6 +80,42 @@ process busco {
         fi
 
     fi
+
+    ##### Get the final lineage
+
+    SUMMARY_SPECIFIC=(busco_out/short_summary.specific.*.txt)
+    if [ \${#SUMMARY_SPECIFIC[@]} -ne 1 ]; then
+        echo "Zero or multiple 'short_summary.specific.*.txt' files found." >> ${id}/exit_info.txt
+        exit 0
+    fi
+
+    REGEX="short_summary.specific.([^.]+).*.txt"
+    if [[ \$SUMMARY_SPECIFIC =~ \$REGEX ]]; then
+        LINEAGE="\${BASH_REMATCH[1]}"
+    else
+        echo "Invalid 'short_summary.specific.*.txt' file found." >> ${id}/exit_info.txt
+        exit 0
+    fi
+
+    ##### Prepare output
+    
+    LINEAGE_DIR="busco_out/run_\$LINEAGE"
+    
+    if [ ! -d \$LINEAGE_DIR ]; then
+        echo "'\$LINEAGE_DIR' directory not found." >> ${id}/exit_info.txt
+        exit 0
+    fi
+        
+    cp -R \${LINEAGE_DIR}/busco_sequences ${id}/${id}_busco_sequences
+    cp \${LINEAGE_DIR}/missing_busco_list.tsv ${id}/${id}_missing_busco_list.tsv
+    cp \${LINEAGE_DIR}/full_table.tsv ${id}/${id}_full_table.tsv
+    cp \${LINEAGE_DIR}/short_summary.txt ${id}/${id}_short_summary.txt
+
+    ##### Remove unnecessary directories
+
+    rm -rf busco_out busco_downloads
+    
+    ##### Exit
 
     exit \$BUSCO_EXIT
     """
