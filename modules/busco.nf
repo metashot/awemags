@@ -12,6 +12,7 @@ process busco {
 
     output:
     path "${id}/*"
+    path "${id}/${id}_busco_sequences/*"
     path "${id}/${id}_short_summary.txt", optional: true, emit: summary
     tuple val(id), path("${id}/${id}_busco_sequences/single_copy_busco_sequences/*.faa"), optional: true, emit: sgc
 
