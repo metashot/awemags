@@ -36,10 +36,10 @@ workflow {
             .flatMap()
             .map { file -> tuple(file.baseName, file) }
         
-        /* BUSCO SCG MSA and phylogeneti tree inference */
+        /* BUSCO SCG MSA and phylogenetic tree inference */
         if ( (!params.skip_tree) & (!['auto', 'auto-prok', 'auto-euk'].contains(params.lineage)) ) {
             busco_genes_ch = filtered_ch
-                .join(busco.out.sgc, by: 0)
+                .join(busco.out.scg, by: 0)
                 .map { row -> [ row[0], row[2] ] }
                 .transpose()
                 .map { row -> [ row[1].baseName, row[0], row[1]] }
