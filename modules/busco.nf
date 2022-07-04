@@ -17,7 +17,7 @@ process busco {
     path "${id}/${id}_missing_busco_list.tsv", optional: true
     path "${id}/${id}_busco_sequences/multi_copy_busco_sequences", optional: true
     path "${id}/${id}_busco_sequences/fragmented_busco_sequences", optional: true
-    path "${id}/${id}_busco_sequences/single_copy_busco_sequences/*.fna"), optional: true
+    path "${id}/${id}_busco_sequences/single_copy_busco_sequences/*.fna", optional: true
     path "${id}/${id}_short_summary.txt", optional: true, emit: summary
     tuple val(id), path("${id}/${id}_busco_sequences/single_copy_busco_sequences/*.faa"), optional: true, emit: scg
 
