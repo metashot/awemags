@@ -60,7 +60,12 @@ workflow {
 
             muscle(busco_genes_ch)
             trimal(muscle.out.msa)
-            amas(trimal.out.trim_msa.map { row -> row[1] }.collect())
+            
+            selected_genes_ch = trimal.out.trim_msa
+                .map { row -> row[1] }
+                .randomSample( params.concat_genes_nmax, params.concat_genes_seed )
+                .collect()
+            amas(selected_genes_ch)
             concat_msa_ch = amas.out.concat_msa
                 .map { file -> tuple( file, file.countLines() ) }
             raxml(concat_msa_ch)

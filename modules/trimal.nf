@@ -14,7 +14,7 @@ process trimal {
 
         script:       
         """
-        trimal -in ${seqs} -out ${id}.trim.msa.faa -automated1
+        trimal -in ${seqs} -out ${id}.trim.msa.faa -gt 0.5 
         sed -i 's/ [[:digit:]]\\+ bp\$//g' ${id}.trim.msa.faa
         """
 }
