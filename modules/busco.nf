@@ -51,9 +51,10 @@ process busco {
     if [ "${param_offline}" = "" ]; then
         rm busco_downloads
     fi
-
+    
+    cp -r /config/augustus/ config_augustus
     set +e
-    busco \
+    AUGUSTUS_CONFIG_PATH=config_augustus busco \
         -i ${genome} \
         -o busco_out \
         -m genome \
@@ -62,6 +63,7 @@ process busco {
         ${param_offline} \
         --cpu ${task.cpus}
     BUSCO_EXIT=\$?
+    rm -rf config_augustus
 
     mkdir ${id}
     cp -R busco_out/logs ${id}
