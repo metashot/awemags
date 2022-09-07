@@ -59,9 +59,7 @@ workflow {
                 .filter { gene, file -> file.countFasta() > 1 }
 
             muscle(busco_genes_ch)
-            nbusco_genes = busco_genes_ch.count()
-            max_ncols_gene = params.max_ncols.intdiv(nbusco_genes)
-            
+            max_ncols_gene = params.max_ncols / busco_genes_ch.count() 
             select_columns(muscle.out.msa, max_ncols_gene)
             
             // selected_genes_ch = trimal.out.trim_msa
