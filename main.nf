@@ -60,7 +60,7 @@ workflow {
 
             muscle(busco_genes_ch)
             nbusco_genes = busco_genes_ch.count()
-            max_ncols_gene = Math.floor(params.max_ncols / nbusco_genes) as int
+            max_ncols_gene = Math.floor(params.max_ncols as float / nbusco_genes) as int
             select_columns(muscle.out.msa, max_ncols_gene)
             
             // selected_genes_ch = trimal.out.trim_msa
