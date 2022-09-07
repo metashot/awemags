@@ -9,9 +9,9 @@ include { itsx } from './modules/itsx'
 include { mmseqs_db_download; mmseqs_easy_taxonomy } from './modules/mmseqs'
 include { metaeuk_easy_predict } from './modules/metaeuk'
 include { eggnog_db_download; eggnog_mapper } from './modules/eggnog_mapper'
-include { format_quality; genome_filter; pseudochr; format_mmseqs_lca; merge_eggnog_mapper; derep_info} from './modules/utils'
+include { format_quality; genome_filter; pseudo_chr; format_mmseqs_lca; merge_eggnog_mapper; derep_info, select_columns} from './modules/utils'
 include { muscle } from './modules/muscle'
-include { trimal } from './modules/trimal'
+//include { trimal } from './modules/trimal'
 include { amas } from './modules/amas'
 include { raxml } from './modules/gubbins'
 
@@ -59,16 +59,18 @@ workflow {
                 .filter { gene, file -> file.countFasta() > 1 }
 
             muscle(busco_genes_ch)
-            trimal(muscle.out.msa)
+            nbusco_genes = busco_genes_ch.count()
+            max_ncols_gene = Math.floor(params.max_ncols / nbusco_genes) as int
+            select_columns(muscle.out.msa, max_ncols_gene)
             
-            selected_genes_ch = trimal.out.trim_msa
-                .map { row -> row[1] }
-                .toSortedList()
-                .flatten()
-                .randomSample( params.concat_genes_nmax, params.concat_genes_seed )
-                .collect()
+            // selected_genes_ch = trimal.out.trim_msa
+            //     .map { row -> row[1] }
+            //     .toSortedList()
+            //     .flatten()
+            //     .randomSample( params.concat_genes_nmax, params.concat_genes_seed )
+            //     .collect()
 
-            amas(selected_genes_ch)
+            amas(select_columns.out.trim_msa.map { row -> row[1] }.collect())
             concat_msa_ch = amas.out.concat_msa
                 .map { file -> tuple( file, file.countLines() ) }
             raxml(concat_msa_ch)
@@ -85,14 +87,9 @@ workflow {
 
         if ( !params.skip_dereplication ) {
             drep_without_genomeinfo(filtered_ch.map { row -> row[1] }.collect())
-            derep_info(
-                drep_without_genomeinfo.out.cdb,
+            derep_info(drep_without_genomeinfo.out.cdb,
                 drep_without_genomeinfo.out.wdb)
         }
-    }
-
-    if ( !params.skip_itsx ) {
-        itsx(filtered_ch)
     }
 
     // MMseqs2 database
@@ -111,9 +108,9 @@ workflow {
 
     // MMseq2 taxonomy
     if ( !params.skip_taxonomy ) {
-        pseudochr(filtered_ch)
-        pseudochr_ch = pseudochr.out.pseudochr
-        mmseqs_easy_taxonomy(pseudochr_ch, mmseqs_db_dir, mmseqs_db_name)
+        pseudo_chr(filtered_ch)
+        pseudo_chr_ch = pseudochr.out.pseudochr
+        mmseqs_easy_taxonomy(pseudo_chr_ch, mmseqs_db_dir, mmseqs_db_name)
         mmseqs_lca_ch = mmseqs_easy_taxonomy.out.lca
             .collectFile(
                 name:'mmseqs_lca.txt', 
@@ -141,5 +138,10 @@ workflow {
 
         eggnog_mapper(prot_ch, eggnog_db)
         merge_eggnog_mapper(eggnog_mapper.out.annotations.collect())
+    }
+
+    // ITSx
+    if ( !params.skip_itsx ) {
+        itsx(filtered_ch)
     }
 }

@@ -48,7 +48,7 @@ process genome_filter {
     """
 }
 
-process pseudochr {
+process pseudo_chr {
     tag "${id}"
 
     input:
@@ -59,7 +59,7 @@ process pseudochr {
     
     script:   
     """
-    pseudochr.py ${input} ${id}.pseudochr.fa
+    pseudo_chr.py ${input} ${id}.pseudochr.fa
     """
 }
 
@@ -96,17 +96,33 @@ process merge_eggnog_mapper {
 }
 
 process derep_info {
-        publishDir "${params.outdir}" , mode: 'copy'
+    publishDir "${params.outdir}" , mode: 'copy'
+    
+    input:
+    path 'Cdb.csv'
+    path 'Wdb.csv'
+    
+    output:
+    path 'derep_info.tsv'
+    
+    script:   
+    """
+    derep_info.py Cdb.csv Wdb.csv derep_info.tsv 
+    """
+}
 
-        input:
-        path 'Cdb.csv'
-        path 'Wdb.csv'
+process select_columns {
 
-        output:
-        path 'derep_info.tsv'
+    publishDir "${params.outdir}/tree/trim_msa" , mode: 'copy'
 
-        script:   
-        """
-        derep_info.py Cdb.csv Wdb.csv derep_info.tsv 
-        """
-    }
+    input:
+    tuple val(id), path(seqs), val(max_ncols)
+
+    output:
+    tuple val(id), path("${id}.trim.msa.faa"), emit: trim_msa
+
+    script:       
+    """
+    select_columns.py 0.5 0.25 0.95 ${max_ncols}
+    """
+}
