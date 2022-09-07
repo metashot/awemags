@@ -117,13 +117,14 @@ process select_columns {
 
     input:
     tuple val(id), path(seqs)
-    val(max_ncols)
-    
+    val(n_busco_genes)
+
     output:
     tuple val(id), path("${id}.trim.msa.faa"), emit: trim_msa
 
-    script:       
+    script:
+    max_ncols_gene = Math.floor(params.max_ncols / n_busco_genes) as int
     """
-    select_columns.py 0.5 0.25 0.95 ${max_ncols}
+    select_columns.py 0.5 0.25 0.95 ${max_ncols_gene}
     """
 }

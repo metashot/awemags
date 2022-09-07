@@ -59,8 +59,8 @@ workflow {
                 .filter { gene, file -> file.countFasta() > 1 }
 
             muscle(busco_genes_ch)
-            max_ncols_gene = Math.floor( params.max_ncols.toFloat() / busco_genes_ch.count().toFloat()) as int
-            select_columns(muscle.out.msa, max_ncols_gene)
+            n_busco_genes = busco_genes_ch.count()
+            select_columns(muscle.out.msa, n_busco_genes)
             
             // selected_genes_ch = trimal.out.trim_msa
             //     .map { row -> row[1] }
