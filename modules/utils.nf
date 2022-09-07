@@ -116,8 +116,9 @@ process select_columns {
     publishDir "${params.outdir}/tree/trim_msa" , mode: 'copy'
 
     input:
-    tuple val(id), path(seqs), val(max_ncols)
-
+    tuple val(id), path(seqs)
+    val(max_ncols)
+    
     output:
     tuple val(id), path("${id}.trim.msa.faa"), emit: trim_msa
 
