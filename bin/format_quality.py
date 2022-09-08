@@ -36,7 +36,7 @@ class BuscoSummary():
         p = re.compile(r'Summarized benchmarking in BUSCO notation for file '
                        r'(.+)' )
         m = p.search(summary)
-        summary_dict['Genome'] = m.group(1)
+        summary_dict['Genome'] = os.path.basename(m.group(1))
         
         # Lineage
         p = re.compile(r'The lineage dataset is: (\S+)' )
