@@ -125,6 +125,6 @@ process select_columns {
     script:
     max_ncols_gene = Math.floor(params.max_ncols / n_busco_genes) as int
     """
-    select_columns.py 0.5 0.25 0.95 ${max_ncols_gene}
+    select_columns.py ${seqs} ${id}.trim.msa.faa 0.5 0.25 0.95 ${max_ncols_gene}
     """
 }
