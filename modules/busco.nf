@@ -87,6 +87,13 @@ process busco {
             exit 0
         fi
 
+        EXIT_MSG='ERROR:busco.BuscoDownloadManager'
+        grep -q "\$EXIT_MSG" \$BUSCO_LOG
+        if [ "\$?" -eq 0 ]; then
+            echo "Cannot reach the database." >> ${id}/exit_info.txt
+            exit 1
+        fi
+
     fi
 
     ##### Get the final lineage
