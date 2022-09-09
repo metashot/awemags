@@ -14,6 +14,10 @@ editing.
 
 [MetaShot Home](https://metashot.github.io/)
 
+**Table of contents**
+
+.. contents:: :local:
+
 ## Main features
 aweMAGs is a container-enabled [Nextflow](https://www.nextflow.io/) pipeline for
 quality assessment, dereplication, gene discovery, taxonomic and functional
@@ -36,7 +40,7 @@ batch infrastructures in the cloud. Main features:
 - Fast functional annotation using
   [EggNOG-mapper](https://github.com/eggnogdb/eggnog-mapper);
 - Internal transcriber spacers extraction using ITSx
-- Automatic databases download;
+- Automatic download of databases;
 - Summary tables for genome quality, taxonomy predictions and functional
   annotations.
 
@@ -60,20 +64,21 @@ Software included:
 
 ## Quick start
 
-Requirements...
+1. Install Docker (or Singulariry) and Nextflow (see
+   [Dependencies](https://metashot.github.io/#dependencies));
 
-1. Install [Docker](https://www.docker.com/get-started/) and Nextflow.
-
-1. Start running the analysis:
+1. Run the full pipeline:
    
   ```bash
-  nextflow run metashot/aweMAGs \
+  nextflow run metashot/aweMAGs -r 1.0.0 \
     --genomes '*.fa' \
     --outdir results
   ```
 
-  The reference databases (BUSCO, MMseqs2 and eggNOG) will be downloaded
-  automatically from the Internet.
+  Using this command, the reference databases (BUSCO, MMseqs2 and eggNOG) will
+  be downloaded automatically from the Internet.
+
+## Documentation
 
 ## Parameters
 Options and default values are decladed in [`nextflow.config`](nextflow.config).
