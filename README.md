@@ -1,6 +1,5 @@
 **metashot/aweMAGs is currently under development!**
 
-
 metashot/aweMAGs is an automated workflow for **large-scale microbial eukaryotic
 MAGs** (metagenome assembled genomes) analysis. Although aweMAGs has been
 specifically designed for eukaryotic genomes, it can also work on prokaryotic or
@@ -27,13 +26,19 @@ batch infrastructures in the cloud. Main features:
   [BUSCO](https://busco.ezlab.org/) and
   [BBTools](https://jgi.doe.gov/data-and-tools/software-tools/bbtools/);
 - Dereplication with [dRep](https://github.com/MrOlm/drep);
-- Fast taxonomic classification using [MMseqs2 taxonomy](https://github.com/soedinglab/MMseqs2) ;
-- Sensitive reference-based gene discovery with [MetaEuk](https://github.com/soedinglab/metaeuk);
-- Fast functional annotation using [EggNOG-mapper](https://github.com/eggnogdb/eggnog-mapper);
+- Multiple sequence alignment (MSA) of BUSCO single copy genes (SGCs) with
+  [MUSCLE](https://drive5.com/muscle5/) v5; phylogenetic tree inference with
+  [RAxML](https://cme.h-its.org/exelixis/web/software/raxml/); 
+- Fast taxonomic classification using [MMseqs2
+  taxonomy](https://github.com/soedinglab/MMseqs2);
+- Sensitive, reference-based gene discovery with
+  [MetaEuk](https://github.com/soedinglab/metaeuk);
+- Fast functional annotation using
+  [EggNOG-mapper](https://github.com/eggnogdb/eggnog-mapper);
+- Internal transcriber spacers extraction using ITSx
 - Automatic databases download;
-- Summary tables for genome quality, taxonomy predictions and functional annotations.
-
-Each step can be independently skipped.
+- Summary tables for genome quality, taxonomy predictions and functional
+  annotations.
 
 <img
 src=https://github.com/metashot/awemags/blob/master/docs/images/awemags.png
