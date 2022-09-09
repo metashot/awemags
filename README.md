@@ -37,7 +37,7 @@ Each step can be independently skipped.
 
 <img
 src=https://github.com/metashot/awemags/blob/master/docs/images/awemags.png
-width="500">
+width="800">
 
 ## Quick start
 
