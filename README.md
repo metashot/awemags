@@ -14,7 +14,7 @@ editing.
 
 [MetaShot Home](https://metashot.github.io/)
 
-## Features
+## Main features
 aweMAGs is a container-enabled [Nextflow](https://www.nextflow.io/) pipeline for
 quality assessment, dereplication, gene discovery, taxonomic and functional
 annotation of eukariotic MAGs. It can run out-of-the-box on any platform that
@@ -23,7 +23,7 @@ supports Nextflow, [Docker](https://www.docker.com/) or
 batch infrastructures in the cloud. Main features:
 
 - Completeness, contamination estimates and basic assambly statistics using
-  [BUSCO](https://busco.ezlab.org/) and
+  [BUSCO](https://busco.ezlab.org/) v5 and
   [BBTools](https://jgi.doe.gov/data-and-tools/software-tools/bbtools/);
 - Dereplication with [dRep](https://github.com/MrOlm/drep);
 - Multiple sequence alignment (MSA) of BUSCO single copy genes (SGCs) with
@@ -43,6 +43,20 @@ batch infrastructures in the cloud. Main features:
 <img
 src=https://github.com/metashot/awemags/blob/master/docs/images/awemags.png
 width="800">
+
+Software included:
+
+| Software | Version |
+| -------- | ------- |
+| BUSCO | 5.1.3 |
+| BBTools | 38.79 |
+| dRep | 2.6.2 |
+| MUSCLE | 5.1 |
+| RAxML | 8.2.12 |
+| MMSeq2 | 13 |
+| MetaEuk | 5 |
+| EggNOG-mapper | 2.1.5 |
+| ITSx | 1.1.2 |
 
 ## Quick start
 
