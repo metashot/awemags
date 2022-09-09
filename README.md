@@ -98,10 +98,9 @@ Software included:
   be downloaded automatically from the Internet.
 
 ## Documentation
-
-### Input and output
 Options and default values are decladed in [`nextflow.config`](nextflow.config).
 
+### Input and output
 - `--genomes`: input genomes/bins in FASTA format (default `"data/*.fa"`)
 - `--outdir`: output directory (default `"results"`)
 
@@ -109,17 +108,35 @@ Options and default values are decladed in [`nextflow.config`](nextflow.config).
 - `--skip_filtering`: skip quality assessment and and genome filtering.
 - `--busco_db`: BUSCO database path for offline mode. (default 'none': download
     from Internet)
-- `--lineage`: BUSCO lineage or lineage mode. Accepted values are:
+- `--lineage`: BUSCO lineage or lineage mode (default `"auto-euk"`). Accepted
+  values are:
   - `"auto-euk"`, `"auto-prok"`, `"auto"` (auto lineage mode)
   - a dataset name (e.g. `"fungi"` or `"fungi_odb10"`) or
   - a path (e.g. `"/home/user/fungi_odb10"`) 
-  (default `"auto-euk"`)
 - `--min_completeness`: discard sequences with less than `min_completeness`%
     completeness (default 50)
 - `--max_contamination`: discard sequences with more than `max_contamination`%
     contamination (default 10)
 
 ### Dereplication
+By default, genomes will be dereplicated. After dereplication, for each cluster
+the genome with the higher score is selected as representative. The score will
+be computed using the following formula:
+
+  ```
+  score = completeness - 5 x contamination + 0.5 x log(N50)
+  ```
+
+If the quality assessment was skipped (`--skip_filtering` parameter),
+the following formula will be used:
+  
+  ```
+  score =  log(size)
+  ```
+
+By default the dereplication is performed with the 99% ANI threshold
+(0.99, parameter `--ani_thr`).
+
 - `--skip_dereplication`: skip the dereplication step
 - `--ani_thr`: ANI threshold for dereplication (> 0.90, default 0.99)
 - `--min_overlap`: minimum overlap fraction between genomes (default 0.3)
@@ -183,24 +200,7 @@ directory after the pipeline has finished.
 ## Documentation
 
 ### A note on dereplication
-When `--skip_dereplication=false`, filtered genomes will be dereplicated. After
-dereplication, for each cluster the genome with the higher score is selected as
-representative. By default, the score will be computed using the following
-formula:
 
-  ```
-  score = completeness - 5 x contamination + 0.5 x log(N50)
-  ```
-
-If BUSCO quality assessment was skipped (`--skip_filtering` parameter),
-the following formula will be used:
-  
-  ```
-  score =  log(size)
-  ```
-
-By default the dereplication is performed with the 99% ANI threshold
-(0.99, parameter `--ani_thr`).
 
 ## System requirements
 Please refer to [System
