@@ -11,18 +11,16 @@ include { metaeuk_easy_predict } from './modules/metaeuk'
 include { eggnog_db_download; eggnog_mapper } from './modules/eggnog_mapper'
 include { format_quality; genome_filter; pseudo_chr; format_mmseqs_lca; merge_eggnog_mapper; derep_info; select_columns} from './modules/utils'
 include { muscle } from './modules/muscle'
-//include { trimal } from './modules/trimal'
 include { amas } from './modules/amas'
 include { raxml } from './modules/gubbins'
 
 workflow {
     
-    Channel
+    genomes_ch = Channel
         .fromPath( params.genomes )
         .map { file -> tuple(file.baseName, file) }
-        .set { genomes_ch }
 
-    /* Filtering */
+    /* Quality assessment and genome filtering */
     if ( !params.skip_filtering ) {
         lineage = file(params.lineage, type: 'file')
         busco_db = file(params.busco_db, type: 'dir')

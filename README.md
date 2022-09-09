@@ -16,7 +16,26 @@ editing.
 
 **Table of contents**
 
-.. contents:: :local:
+- [Main features](#main-features)
+- [Quick start](#quick-start)
+- [Documentation](#documentation)
+  - [Input and output](#input-and-output)
+  - [Quality assessment and genome filtering](#quality-assessment-and-genome-filtering)
+  - [Dereplication](#dereplication)
+  - [Taxonomy classification and gene prediction */](#taxonomy-classification-and-gene-prediction-)
+  - [eggNOG](#eggnog)
+  - [Resource limits](#resource-limits)
+- [Output](#output)
+  - [BUSCO and genome bins filtering](#busco-and-genome-bins-filtering)
+  - [Dereplication](#dereplication-1)
+  - [Taxonomy classification](#taxonomy-classification)
+  - [Gene prediction](#gene-prediction)
+  - [eggNOG](#eggnog-1)
+- [Documentation](#documentation-1)
+  - [A note on dereplication](#a-note-on-dereplication)
+- [System requirements](#system-requirements)
+  - [Memory](#memory)
+  - [Disk](#disk)
 
 ## Main features
 aweMAGs is a container-enabled [Nextflow](https://www.nextflow.io/) pipeline for
@@ -80,21 +99,21 @@ Software included:
 
 ## Documentation
 
-## Parameters
+### Input and output
 Options and default values are decladed in [`nextflow.config`](nextflow.config).
 
-### Input and output
 - `--genomes`: input genomes/bins in FASTA format (default `"data/*.fa"`)
 - `--outdir`: output directory (default `"results"`)
 
-### BUSCO and genome bins filtering
-
-- `--skip_filtering`: skip BUSCO quality assessment and and bins filtering
+### Quality assessment and genome filtering
+- `--skip_filtering`: skip quality assessment and and genome filtering.
 - `--busco_db`: BUSCO database path for offline mode. (default 'none': download
     from Internet)
-- `--lineage`: BUSCO lineage or lineage mode. `"auto"`, `"auto-prok"`,
-    `"auto-euk"`, a dataset name (e.g. `"fungi"` or `"fungi_odb10"`) or a path
-    (e.g. `"/home/user/fungi_odb10"`) (default `"auto-euk"`)
+- `--lineage`: BUSCO lineage or lineage mode. Accepted values are:
+  - `"auto-euk"`, `"auto-prok"`, `"auto"` (auto lineage mode)
+  - a dataset name (e.g. `"fungi"` or `"fungi_odb10"`) or
+  - a path (e.g. `"/home/user/fungi_odb10"`) 
+  (default `"auto-euk"`)
 - `--min_completeness`: discard sequences with less than `min_completeness`%
     completeness (default 50)
 - `--max_contamination`: discard sequences with more than `max_contamination`%
