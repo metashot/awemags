@@ -22,7 +22,7 @@ editing.
   - [Input and output](#input-and-output)
   - [Quality assessment and genome filtering](#quality-assessment-and-genome-filtering)
   - [Dereplication](#dereplication)
-  - [Taxonomy classification and gene prediction */](#taxonomy-classification-and-gene-prediction-)
+  - [Taxonomy classification and gene prediction](#taxonomy-classification-and-gene-prediction)
   - [eggNOG](#eggnog)
   - [Resource limits](#resource-limits)
 - [Output](#output)
@@ -118,6 +118,12 @@ Options and default values are decladed in [`nextflow.config`](nextflow.config).
 - `--max_contamination`: discard sequences with more than `max_contamination`%
     contamination (default 10)
 
+The main outputs of this step are:
+- `quality.tsv`: summary of genomes quality (including completeness,
+  contamination, N50 ...)
+- `filtered`: this folder contains the genomes filtered according to
+  `--min_completeness` and `--max_contamination` options
+
 ### Dereplication
 By default, genomes will be dereplicated. After dereplication, for each cluster
 the genome with the higher score is selected as representative. The score will
@@ -141,7 +147,7 @@ By default the dereplication is performed with the 99% ANI threshold
 - `--ani_thr`: ANI threshold for dereplication (> 0.90, default 0.99)
 - `--min_overlap`: minimum overlap fraction between genomes (default 0.3)
 
-### Taxonomy classification and gene prediction */
+### Taxonomy classification and gene prediction
 - `skip_taxonomy`: skip the taxonomy classification (MMseqs2)
 - `skip_genepred`: skip the gene prediction (MetaEuk)
 - `mmseqs_db`: MMseqs2 database path (used by MMseqs2 and MetaEuk) (default
@@ -170,10 +176,7 @@ The files and directories listed below will be created in the `results`
 directory after the pipeline has finished.
 
 ### BUSCO and genome bins filtering
-- `quality.tsv`: summary of genomes quality (including completeness,
-  contamination, N50 ...
-- `filtered`: this folder contains the genomes filtered according to
-  `--min_completeness` and `--max_contamination` options
+
 
 ### Dereplication
 - `derep_info.tsv`: dereplication summary (if `--skip_dereplication=false`)
