@@ -121,7 +121,7 @@ process select_columns {
     val(n_busco_genes)
     
     output:
-    tuple val(id), path("${id}.trim.msa.faa"), emit: trim_msa
+    tuple val(id), path("${id}.trim.msa.faa"), optional: true, emit: trim_msa
 
     script:
     max_ncols_gene = Math.floor(params.max_ncols / n_busco_genes) as int
