@@ -59,14 +59,6 @@ workflow {
             muscle(busco_genes_ch)
             n_busco_genes = busco_genes_ch.count()
             select_columns(muscle.out.msa, n_busco_genes)
-            
-            // selected_genes_ch = trimal.out.trim_msa
-            //     .map { row -> row[1] }
-            //     .toSortedList()
-            //     .flatten()
-            //     .randomSample( params.concat_genes_nmax, params.concat_genes_seed )
-            //     .collect()
-
             amas(select_columns.out.trim_msa.map { row -> row[1] }.collect())
             concat_msa_ch = amas.out.concat_msa
                 .map { file -> tuple( file, file.countLines() ) }

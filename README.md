@@ -26,13 +26,9 @@ editing.
   - [eggNOG](#eggnog)
   - [Resource limits](#resource-limits)
 - [Output](#output)
-  - [BUSCO and genome bins filtering](#busco-and-genome-bins-filtering)
-  - [Dereplication](#dereplication-1)
   - [Taxonomy classification](#taxonomy-classification)
   - [Gene prediction](#gene-prediction)
   - [eggNOG](#eggnog-1)
-- [Documentation](#documentation-1)
-  - [A note on dereplication](#a-note-on-dereplication)
 - [System requirements](#system-requirements)
   - [Memory](#memory)
   - [Disk](#disk)
@@ -101,10 +97,12 @@ Software included:
 Options and default values are decladed in [`nextflow.config`](nextflow.config).
 
 ### Input and output
+Options:
 - `--genomes`: input genomes/bins in FASTA format (default `"data/*.fa"`)
 - `--outdir`: output directory (default `"results"`)
 
 ### Quality assessment and genome filtering
+Options:
 - `--skip_filtering`: skip quality assessment and and genome filtering.
 - `--busco_db`: BUSCO database path for offline mode. (default 'none': download
     from Internet)
@@ -118,7 +116,7 @@ Options and default values are decladed in [`nextflow.config`](nextflow.config).
 - `--max_contamination`: discard sequences with more than `max_contamination`%
     contamination (default 10)
 
-The main outputs of this step are:
+The main **outputs** of this step are:
 - `quality.tsv`: summary of genomes quality (including completeness,
   contamination, N50 ...)
 - `filtered`: this folder contains the genomes filtered according to
@@ -141,11 +139,22 @@ the following formula will be used:
   ```
 
 By default the dereplication is performed with the 99% ANI threshold
-(0.99, parameter `--ani_thr`).
+(0.99, parameter `--ani_thr`). Options
 
 - `--skip_dereplication`: skip the dereplication step
 - `--ani_thr`: ANI threshold for dereplication (> 0.90, default 0.99)
 - `--min_overlap`: minimum overlap fraction between genomes (default 0.3)
+
+The main **outputs** of this step are:
+- `derep_info.tsv`: dereplication summary (if `--skip_dereplication=false`).
+  This file contains:
+  - Genome: genome filename
+  - Cluster: the cluster ID (from 0 to N-1)
+  - Representative: is this genome the cluster representative?
+- `filtered_repr`: this folder contains the representative genomes
+- `drep`: original data tables, figures and log of dRep.
+
+'auto', 'auto-prok', 'auto-euk'
 
 ### Taxonomy classification and gene prediction
 - `skip_taxonomy`: skip the taxonomy classification (MMseqs2)
@@ -175,17 +184,7 @@ See also [System requirements](https://metashot.github.io/#system-requirements).
 The files and directories listed below will be created in the `results`
 directory after the pipeline has finished.
 
-### BUSCO and genome bins filtering
 
-
-### Dereplication
-- `derep_info.tsv`: dereplication summary (if `--skip_dereplication=false`)
-  This file contains:
-  - Genome: genome filename
-  - Cluster: the cluster ID (from 0 to N-1)
-  - Representative: is this genome the cluster representative?
-- `filtered_repr`: this folder contains the representative genomes
-- `drep`: original data tables, figures and log of drep.
 
 ### Taxonomy classification
 - `taxonomy.tsv`: summary of the taxonomic classification
@@ -200,9 +199,6 @@ directory after the pipeline has finished.
 - `eggnog_*.tsv`: the count matrix for each transferred annotation
 - `eggnog`: directory containing the original eggNOG files
 
-## Documentation
-
-### A note on dereplication
 
 
 ## System requirements
