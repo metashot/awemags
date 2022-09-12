@@ -50,7 +50,7 @@ class BuscoSummary():
             summary_dict[key] = m.group(1)
 
         summary_dict['Completeness'] = \
-            100. - 100. * int(summary_dict['Missing']) / \
+            100. * int(summary_dict['Complete']) / \
                 int(summary_dict['Total'])
         summary_dict['Contamination'] = \
             100. * int(summary_dict['Duplicated']) / \

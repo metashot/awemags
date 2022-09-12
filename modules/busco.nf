@@ -72,15 +72,8 @@ process busco {
 
     BUSCO_LOG=${id}/logs/busco.log
     if [ "\$BUSCO_EXIT" -eq 1 ] && [ -f \$BUSCO_LOG ]; then
-        
-        EXIT_MSG='SystemExit: Augustus did not recognize any genes'
-        grep -q "\$EXIT_MSG" \$BUSCO_LOG
-        if [ "\$?" -eq 0 ]; then
-            echo "Augustus did not recognize any genes." >> ${id}/exit_info.txt
-            exit 0
-        fi
 
-        EXIT_MSG='SystemExit: Placements failed'
+        EXIT_MSG='Placements failed'
         grep -q "\$EXIT_MSG" \$BUSCO_LOG
         if [ "\$?" -eq 0 ]; then
             echo "Placements failed." >> ${id}/exit_info.txt
