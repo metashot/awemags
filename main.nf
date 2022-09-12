@@ -56,9 +56,11 @@ workflow {
                 .map { file -> tuple(file.baseName, file) }
                 .filter { gene, file -> file.countFasta() > 1 }
 
+            n_busco_genes = filtered_ch.count()
+            n_genomes = busco_genes_ch.count()
+
             muscle(busco_genes_ch)
-            n_busco_genes = busco_genes_ch.count()
-            select_columns(muscle.out.msa, n_busco_genes)
+            select_columns(muscle.out.msa, n_busco_genes, n_genomes)
             amas(select_columns.out.trim_msa.map { row -> row[1] }.collect())
             concat_msa_ch = amas.out.concat_msa
                 .map { file -> tuple( file, file.countLines() ) }

@@ -131,16 +131,17 @@ be computed using the following formula:
   score = completeness - 5 x contamination + 0.5 x log(N50)
   ```
 
-If the quality assessment was skipped (`--skip_filtering` parameter),
-the following formula will be used:
+If the quality assessment and filtering were not performed (`--skip_filtering`
+parameter), the following formula will be used:
   
   ```
   score =  log(size)
   ```
 
-By default the dereplication is performed with the 99% ANI threshold
-(0.99, parameter `--ani_thr`). Options
+By default, the dereplication is performed with the **99% ANI** threshold
+(0.99, parameter `--ani_thr`).
 
+Options:
 - `--skip_dereplication`: skip the dereplication step
 - `--ani_thr`: ANI threshold for dereplication (> 0.90, default 0.99)
 - `--min_overlap`: minimum overlap fraction between genomes (default 0.3)

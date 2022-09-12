@@ -11,11 +11,12 @@ from Bio import AlignIO
 
 INPUT = sys.argv[1]
 OUTPUT = sys.argv[2]
-GAP_THR = float(sys.argv[3])
-MIN_CONS = float(sys.argv[4])
-MAX_CONS = float(sys.argv[5])
-MAX_COLS = int(sys.argv[6])
-RANDOM_SEED = int(sys.argv[7])
+N_GENOMES = sys.argv[3]
+GAP_THR = float(sys.argv[4])
+MIN_CONS = float(sys.argv[5])
+MAX_CONS = float(sys.argv[6])
+MAX_COLS = int(sys.argv[7])
+RANDOM_SEED = int(sys.argv[8])
 
 
 align = AlignIO.read(INPUT, "fasta")
@@ -24,16 +25,11 @@ n_cols = align.get_alignment_length()
 keep = []
 for col in range(n_cols):
     col_counter = Counter(align[:, col])
-    n_gaps = 0
-    for c in ['?', '-']:
-        if c in col_counter:
-            n_gaps += col_counter[c]
-
+    n_gaps = col_counter['-'] + (N_GENOMES - n_rows)
+    del col_counter['-']
     n_most_common = col_counter.most_common(1)[0][1]
-    
-    frac_gaps = n_gaps / n_rows
+    frac_gaps = n_gaps / N_GENOMES
     cons = n_most_common / n_rows
-    print(frac_gaps)
     if (frac_gaps > GAP_THR) or (cons > MAX_CONS) or (cons < MIN_CONS):
         pass
     else:
