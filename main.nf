@@ -100,7 +100,7 @@ workflow {
     // MMseq2 taxonomy
     if ( !params.skip_taxonomy ) {
         pseudo_chr(filtered_ch)
-        pseudo_chr_ch = pseudochr.out.pseudochr
+        pseudo_chr_ch = pseudo_chr.out.pseudochr
         mmseqs_easy_taxonomy(pseudo_chr_ch, mmseqs_db_dir, mmseqs_db_name)
         mmseqs_lca_ch = mmseqs_easy_taxonomy.out.lca
             .collectFile(
