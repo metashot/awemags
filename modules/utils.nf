@@ -128,7 +128,7 @@ process select_columns {
     """
     select_columns.py ${seqs} ${id}.trim.msa.faa \
         ${n_genomes} \
-        0.7 \
+        0.5 \
         0.25 \
         0.95 \
         ${max_ncols_gene} \

@@ -12,7 +12,7 @@ from Bio import AlignIO
 INPUT = sys.argv[1]
 OUTPUT = sys.argv[2]
 N_GENOMES = int(sys.argv[3])
-GAP_THR = float(sys.argv[4])
+MAX_FRAC_GAP = float(sys.argv[4])
 MIN_CONS = float(sys.argv[5])
 MAX_CONS = float(sys.argv[6])
 MAX_COLS = int(sys.argv[7])
@@ -30,16 +30,17 @@ for col in range(n_cols):
     n_most_common = col_counter.most_common(1)[0][1]
     frac_gaps = n_gaps / N_GENOMES
     cons = n_most_common / n_rows
-    if (frac_gaps > GAP_THR) or (cons > MAX_CONS) or (cons < MIN_CONS):
+    if (frac_gaps > MAX_FRAC_GAP) or (cons > MAX_CONS) or (cons < MIN_CONS):
         pass
     else:
         keep.append(col)
 
-random.seed(RANDOM_SEED)
-keep = random.sample(keep, min(len(keep), MAX_COLS))
+if len(keep) > 0:
+    random.seed(RANDOM_SEED)
+    keep = random.sample(keep, min(len(keep), MAX_COLS))
 
-with open(OUTPUT, "w") as handle:
-    for record in align:
-        new_seq = "".join([record.seq[i] for i in keep])
-        handle.write(">{}\n".format(record.description))
-        handle.write("{}\n".format(new_seq))
+    with open(OUTPUT, "w") as handle:
+        for record in align:
+            new_seq = "".join([record.seq[i] for i in keep])
+            handle.write(">{}\n".format(record.description))
+            handle.write("{}\n".format(new_seq))
