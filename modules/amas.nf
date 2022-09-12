@@ -9,7 +9,6 @@ process amas {
 
     output:
     path 'concat.msa.faa', emit: concat_msa
-    path 'partitions.txt'
 
     script:       
     """

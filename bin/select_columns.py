@@ -11,7 +11,7 @@ from Bio import AlignIO
 
 INPUT = sys.argv[1]
 OUTPUT = sys.argv[2]
-N_GENOMES = sys.argv[3]
+N_GENOMES = int(sys.argv[3])
 GAP_THR = float(sys.argv[4])
 MIN_CONS = float(sys.argv[5])
 MAX_CONS = float(sys.argv[6])
