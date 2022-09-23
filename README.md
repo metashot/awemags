@@ -22,6 +22,7 @@ editing.
   - [Input and output](#input-and-output)
   - [Quality assessment and genome filtering](#quality-assessment-and-genome-filtering)
   - [Dereplication](#dereplication)
+  - [Single-copy genes MSA and phylogenetic tree inference](#single-copy-genes-msa-and-phylogenetic-tree-inference)
   - [Taxonomy classification and gene prediction](#taxonomy-classification-and-gene-prediction)
   - [eggNOG](#eggnog)
   - [Resource limits](#resource-limits)
@@ -112,9 +113,12 @@ Options:
   - a dataset name (e.g. `"fungi"` or `"fungi_odb10"`) or
   - a path (e.g. `"/home/user/fungi_odb10"`) 
 - `--min_completeness`: discard sequences with less than `min_completeness`%
-    completeness (default 50)
+    completeness (default 50). Completeness is computed as the fraction of
+    complete BUSCOs genes (single-copy or duplicate) found for a particular
+    lineage.
 - `--max_contamination`: discard sequences with more than `max_contamination`%
-    contamination (default 10)
+    contamination (default 10). Contamination (better "redundancy" in this case)
+    is computed as ``# duplicated BUSCOs / # single-copy BUSCOs``
 
 The main **outputs** of this step are:
 - `quality.tsv`: summary of genomes quality (including completeness,
@@ -123,31 +127,32 @@ The main **outputs** of this step are:
   `--min_completeness` and `--max_contamination` options
 
 ### Dereplication
-By default, genomes will be dereplicated. After dereplication, for each cluster
-the genome with the higher score is selected as representative. The score will
-be computed using the following formula:
+By default, input ("filtered") genomes will be clustered using a defined average
+nucleotide identity (ANI) threshold (by default 99% ANI, parameter `--ani_thr
+0.99`). For each cluster, the genome with the higher score is selected as
+representative. The score will be computed using the following formula:
 
   ```
   score = completeness - 5 x contamination + 0.5 x log(N50)
   ```
 
 If the quality assessment and filtering were not performed (`--skip_filtering`
-parameter), the following formula will be used:
+parameter), all the input genomes will be analyzed and the following formula
+will be used:
   
   ```
   score =  log(size)
   ```
 
-By default, the dereplication is performed with the **99% ANI** threshold
-(0.99, parameter `--ani_thr`).
+You can skip this step with the option ``--skip_dereplication``.
 
-Options:
+The options related to this step are:
 - `--skip_dereplication`: skip the dereplication step
 - `--ani_thr`: ANI threshold for dereplication (> 0.90, default 0.99)
 - `--min_overlap`: minimum overlap fraction between genomes (default 0.3)
 
 The main **outputs** of this step are:
-- `derep_info.tsv`: dereplication summary (if `--skip_dereplication=false`).
+- `derep_info.tsv`: dereplication summary .
   This file contains:
   - Genome: genome filename
   - Cluster: the cluster ID (from 0 to N-1)
@@ -155,7 +160,23 @@ The main **outputs** of this step are:
 - `filtered_repr`: this folder contains the representative genomes
 - `drep`: original data tables, figures and log of dRep.
 
-'auto', 'auto-prok', 'auto-euk'
+### Single-copy genes MSA and phylogenetic tree inference
+In this step, the single-copy core genes predicted by BUSCO will be aligned
+using MUSCLE v5in each genome sinCG MSA and phylogenetic tree inference 'auto',
+'auto-prok', 'auto-euk'
+
+skip_tree = false                        // skip BUSCO SCG MSA and tree inference (requires "skip_filtering = false")
+    max_ncols = 5000                         // maximum number of MSA columns (taken randomly) tree inference
+    seed_cols = 42                           // random seed
+    raxml_mode = "default"                   // RAxML mode , "default": default RAxML tree search algorithm or
+                                             // "rbs": rapid bootstrapping full analysis
+    raxml_nsearch = 10                       // "default" mode only: number of inferences on the original alignment using
+                                             // distinct randomized MP trees (if ­10 is specified, RAxML will compute 
+                                             // 10 distinct ML trees starting from 10 distinct randomized maximum parsimony
+                                             // starting trees)
+    raxml_nboot = "autoMRE"                  // "rbs" mode only: bootstrap convergence criterion or number of bootstrap 
+                                             // searches (see -I and -#/-N options in RAxML)
+
 
 ### Taxonomy classification and gene prediction
 - `skip_taxonomy`: skip the taxonomy classification (MMseqs2)

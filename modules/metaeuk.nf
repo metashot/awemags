@@ -22,6 +22,7 @@ process metaeuk_easy_predict {
     metaeuk easy-predict \
         --threads ${task.cpus} \
         --split-memory-limit ${task_memory_GB}G \
+        --exhaustive-search \
         ${input} \
         ${db_name} \
         ${id} \
