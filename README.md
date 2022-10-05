@@ -18,6 +18,8 @@ editing.
 
 - [Main features](#main-features)
 - [Quick start](#quick-start)
+  - [Example 1](#example-1)
+  - [Example 2](#example-2)
 - [Documentation](#documentation)
   - [Input and output](#input-and-output)
   - [Quality assessment and genome filtering](#quality-assessment-and-genome-filtering)
@@ -82,9 +84,10 @@ Software included:
 
 1. Install Docker (or Singulariry) and Nextflow (see
    [Dependencies](https://metashot.github.io/#dependencies));
-
-1. Run the full pipeline:
    
+### Example 1
+2.1 Full pipeline, auto lineage mode (eukaryotes)
+  
   ```bash
   nextflow run metashot/aweMAGs -r 1.0.0 \
     --genomes '*.fa' \
@@ -93,6 +96,26 @@ Software included:
 
   Using this command, the reference databases (BUSCO, MMseqs2 and eggNOG) will
   be downloaded automatically from the Internet.
+
+### Example 2
+2.2 Extract fungal genomes only, skip gene prediction and EggNOG annotation.
+Manually download the MMseqs2 Swiss-Prot database for the taxonomic
+classification. 
+
+  ```bash
+  mkdir db
+  docker run --rm --user $(id -u):$(id -g) -v $PWD:/wd -w /wd metashot/mmseqs2:13-1 \
+    mmseqs databases UniProtKB/Swiss-Prot db/swissprot tmp
+  
+  nextflow run metashot/aweMAGs -r 1.0.0 \
+    --genomes '*.fa' \
+    --outdir results \
+    --lineage fungi \
+    --mmseqs_db db/swissprot \
+    --skip_genepred \
+    --skip_eggnog
+  ```
+
 
 ## Documentation
 Options and default values are decladed in [`nextflow.config`](nextflow.config).
