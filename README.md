@@ -82,40 +82,47 @@ Software included:
 
 ## Quick start
 
-1. Install Docker (or Singulariry) and Nextflow (see
-   [Dependencies](https://metashot.github.io/#dependencies));
+Install Docker (or Singulariry) and Nextflow (see
+[Dependencies](https://metashot.github.io/#dependencies))
    
 ### Example 1
-2.1 Full pipeline, auto lineage mode (eukaryotes)
+Full pipeline, auto lineage mode (eukaryotes)
   
   ```bash
-  nextflow run metashot/aweMAGs -r 1.0.0 \
+  nextflow run metashot/awemags -r 1.0.0 \
     --genomes '*.fa' \
     --outdir results
   ```
-
-  Using this command, the reference databases (BUSCO, MMseqs2 and eggNOG) will
-  be downloaded automatically from the Internet.
+Using this command, the reference databases (BUSCO, MMseqs2 and eggNOG) will be
+downloaded automatically from the Internet.
 
 ### Example 2
-2.2 Extract fungal genomes only, skip gene prediction and EggNOG annotation.
-Manually download the MMseqs2 Swiss-Prot database for the taxonomic
-classification. 
+1. Manually download the MMseqs2 Swiss-Prot database for the taxonomic
+classification;
+1. Manually download the BUSCO fungal database;
+1. Extract fungal genomes only, skip gene prediction and EggNOG annotation.
 
   ```bash
-  mkdir db
-  docker run --rm --user $(id -u):$(id -g) -v $PWD:/wd -w /wd metashot/mmseqs2:13-1 \
-    mmseqs databases UniProtKB/Swiss-Prot db/swissprot tmp
-  
-  nextflow run metashot/aweMAGs -r 1.0.0 \
+  # MMseq2 database download (Swiss-Prot)
+  alias mmseqs='docker run --rm --user $(id -u):$(id -g) -v $PWD:/wd -w /wd metashot/mmseqs2:13-1 mmseqs'
+  #alias mmseqs='singularity exec -B $PWD docker://metashot/mmseqs2:13-1 mmseqs'
+  mkdir mmseqs2_db
+  mmseqs databases UniProtKB/Swiss-Prot mmseqs2_db/swissprot tmp
+
+  # BUSCO database download (fungi)
+  wget https://busco-data.ezlab.org/v5/data/lineages/fungi_odb10.2021-06-28.tar.gz \
+    --no-check-certificate -O fungi_odb10.tar.gz
+  tar -zxf fungi_odb10.tar.gz
+
+  # Run aweMAGs
+  nextflow run metashot/awemags -r 1.0.0 \
     --genomes '*.fa' \
     --outdir results \
-    --lineage fungi \
-    --mmseqs_db db/swissprot \
+    --lineage ./fungi_odb10 \
+    --mmseqs_db mmseqs2_db/swissprot \
     --skip_genepred \
     --skip_eggnog
   ```
-
 
 ## Documentation
 Options and default values are decladed in [`nextflow.config`](nextflow.config).
