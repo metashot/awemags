@@ -35,7 +35,7 @@ workflow {
         filtered_ch = genome_filter.out.filtered
             .flatMap()
             .map { file -> tuple(file.baseName, file) }
-    else {
+    } else {
         filtered_ch = genomes_ch
     }
         
@@ -95,8 +95,7 @@ workflow {
             mmseqs_db_download()
             mmseqs_db_dir = mmseqs_db_download.out.mmseqs_db
             mmseqs_db_name = "db"
-        }
-        else {
+        } else {
             mmseqs_db = file(params.mmseqs_db, checkIfExists: true)
             mmseqs_db_dir = mmseqs_db.parent
             mmseqs_db_name = mmseqs_db.name
@@ -127,8 +126,7 @@ workflow {
         if (params.eggnog_db == 'none') {
             eggnog_db_download()
             eggnog_db = eggnog_db_download.out.eggnog_db
-        }
-        else {
+        } else {
             eggnog_db = file(params.eggnog_db, type: 'dir', 
                 checkIfExists: true)
         }
