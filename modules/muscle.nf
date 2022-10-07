@@ -3,7 +3,7 @@ nextflow.enable.dsl=2
 
 process muscle {      
     tag "BUSCO SCG ${id}"
-    publishDir "${params.outdir}/tree/msa" , mode: 'copy'
+    publishDir "${params.outdir}/sgc/msa" , mode: 'copy'
 
 
     input:

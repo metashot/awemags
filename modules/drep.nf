@@ -2,7 +2,7 @@ nextflow.enable.dsl=2
 
 process drep_with_genomeinfo {
     publishDir "${params.outdir}" , mode: 'copy' ,
-        pattern: 'filtered_repr/*'
+        pattern: 'representatives/*'
 
     publishDir "${params.outdir}" , mode: 'copy' ,
         pattern: 'drep/{data_tables,figures,log}/*'
@@ -12,7 +12,7 @@ process drep_with_genomeinfo {
     path(genomes)
 
     output:
-    path 'filtered_repr/*'
+    path 'representatives/*'
     path 'drep/{data_tables,figures,log}/*'
     path 'drep/data_tables/Cdb.csv', emit: cdb
     path 'drep/data_tables/Wdb.csv', emit: wdb
@@ -32,13 +32,13 @@ process drep_with_genomeinfo {
         -strW 0 \
         -g genomes_dir/*
 
-    mv drep/dereplicated_genomes filtered_repr
+    mv drep/dereplicated_genomes representatives
     """
 }
 
 process drep_without_genomeinfo {
     publishDir "${params.outdir}" , mode: 'copy' ,
-        pattern: 'filtered_repr/*'
+        pattern: 'representatives/*'
 
     publishDir "${params.outdir}" , mode: 'copy' ,
         pattern: 'drep/{data_tables,figures,log}/*'
@@ -47,7 +47,7 @@ process drep_without_genomeinfo {
     path(genomes)
 
     output:
-    path 'filtered_repr/*'
+    path 'representatives/*'
     path 'drep/{data_tables,figures,log}/*'
     path 'drep/data_tables/Cdb.csv', emit: cdb
     path 'drep/data_tables/Wdb.csv', emit: wdb
@@ -68,7 +68,7 @@ process drep_without_genomeinfo {
         -N50W 0 \
         -g genomes_dir/*
 
-    mv drep/dereplicated_genomes filtered_repr
+    mv drep/dereplicated_genomes representatives
     """
 }
 

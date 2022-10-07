@@ -20,63 +20,69 @@ workflow {
         .fromPath( params.genomes )
         .map { file -> tuple(file.baseName, file) }
 
-    /* Quality assessment and genome filtering */
+    /* Quality assessment  */
+    lineage = file(params.lineage, type: 'file')
+    busco_db = file(params.busco_db, type: 'dir')
+    busco(genomes_ch, lineage, busco_db)
+    statswrapper(genomes_ch.map { row -> row[1] }.collect())
+    format_quality(busco.out.summary.collect(), statswrapper.out.stats)
+    
+    /* Filtering */
     if ( !params.skip_filtering ) {
-        lineage = file(params.lineage, type: 'file')
-        busco_db = file(params.busco_db, type: 'dir')
-        busco(genomes_ch, lineage, busco_db)
-        statswrapper(genomes_ch.map { row -> row[1] }.collect())
-        format_quality(busco.out.summary.collect(), statswrapper.out.stats)
         genome_filter(format_quality.out.quality,
             genomes_ch.map { row -> row[1] }.collect())
 
         filtered_ch = genome_filter.out.filtered
             .flatMap()
             .map { file -> tuple(file.baseName, file) }
+    else {
+        filtered_ch = genomes_ch
+    }
         
-        /* BUSCO SCG MSA and phylogenetic tree inference */
-        if ( (!params.skip_tree) & (!['auto', 'auto-prok', 'auto-euk'].contains(params.lineage)) ) {
-            busco_genes_ch = filtered_ch
-                .join(busco.out.scg, by: 0)
-                .map { row -> [ row[0], row[2] ] }
-                .transpose()
-                .map { row -> [ row[1].baseName, row[0], row[1]] }
-                .splitFasta( record: [id: true, seqString: true ], limit: 1)
-                .map {
-                    row -> 
-                    def record = [:]
-                        record.id        = row[1]
-                        record.seqString = row[2].seqString
-                    [ row[0], record ]
-                }
-                .collectFile(storeDir: "${params.outdir}/tree/faa") { 
-                    gene, record ->
-                    [ "${gene}.faa", ">" + record.id + '\n' + record.seqString + '\n' ]
-                }
-                .map { file -> tuple(file.baseName, file) }
-                .filter { gene, file -> file.countFasta() > 1 }
+    /* BUSCO SCG MSA */
+    if ( (!params.skip_msa) & (!['auto', 'auto-prok', 'auto-euk'].contains(params.lineage)) ) {
+        busco_genes_ch = filtered_ch
+            .join(busco.out.scg, by: 0)
+            .map { row -> [ row[0], row[2] ] }
+            .transpose()
+            .map { row -> [ row[1].baseName, row[0], row[1]] }
+            .splitFasta( record: [id: true, seqString: true ], limit: 1)
+            .map {
+                row -> 
+                def record = [:]
+                    record.id        = row[1]
+                    record.seqString = row[2].seqString
+                [ row[0], record ]
+            }
+            .collectFile(storeDir: "${params.outdir}/sgc/faa") { 
+                gene, record ->
+                [ "${gene}.faa", ">" + record.id + '\n' + record.seqString + '\n' ]
+            }
+            .map { file -> tuple(file.baseName, file) }
+            .filter { gene, file -> file.countFasta() > 1 }
 
+        muscle(busco_genes_ch)
+
+        /* Phylogenetic tree inference */
+        if (!params.skip_tree) {
             n_genomes = filtered_ch.count()
             n_busco_genes = busco_genes_ch.count()
-
-            muscle(busco_genes_ch)
             select_columns(muscle.out.msa, n_genomes, n_busco_genes)
             amas(select_columns.out.trim_msa.map { row -> row[1] }.collect())
             concat_msa_ch = amas.out.concat_msa
                 .map { file -> tuple( file, file.countLines() ) }
             raxml(concat_msa_ch)
         }
+    }
 
-        if ( !params.skip_dereplication ) {
+    /* Dereplication */
+    if ( !params.skip_dereplication ) {
+        if ( !params.skip_filtering ) {
             drep_with_genomeinfo(format_quality.out.genome_info_drep,
                 filtered_ch.map { row -> row[1] }.collect())
             derep_info(drep_with_genomeinfo.out.cdb,
                 drep_with_genomeinfo.out.wdb)
-        }
-    } else {
-        filtered_ch = genomes_ch
-
-        if ( !params.skip_dereplication ) {
+        } else {
             drep_without_genomeinfo(filtered_ch.map { row -> row[1] }.collect())
             derep_info(drep_without_genomeinfo.out.cdb,
                 drep_without_genomeinfo.out.wdb)

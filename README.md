@@ -22,9 +22,11 @@ editing.
   - [Example 2](#example-2)
 - [Documentation](#documentation)
   - [Input and output](#input-and-output)
-  - [Quality assessment and genome filtering](#quality-assessment-and-genome-filtering)
+  - [Quality assessment](#quality-assessment)
+  - [Genomes filtering](#genomes-filtering)
   - [Dereplication](#dereplication)
-  - [Single-copy genes MSA and phylogenetic tree inference](#single-copy-genes-msa-and-phylogenetic-tree-inference)
+  - [Single-copy genes (SCG) MSA](#single-copy-genes-scg-msa)
+  - [Phylogenetic tree inference (requires `--skip_msa=false`)](#phylogenetic-tree-inference-requires---skip_msafalse)
   - [Taxonomy classification and gene prediction](#taxonomy-classification-and-gene-prediction)
   - [eggNOG](#eggnog)
   - [Resource limits](#resource-limits)
@@ -128,13 +130,12 @@ classification;
 Options and default values are decladed in [`nextflow.config`](nextflow.config).
 
 ### Input and output
-Options:
+
 - `--genomes`: input genomes/bins in FASTA format (default `"data/*.fa"`)
 - `--outdir`: output directory (default `"results"`)
 
-### Quality assessment and genome filtering
-Options:
-- `--skip_filtering`: skip quality assessment and and genome filtering.
+### Quality assessment
+
 - `--busco_db`: BUSCO database path for offline mode. (default 'none': download
     from Internet)
 - `--lineage`: BUSCO lineage or lineage mode (default `"auto-euk"`). Accepted
@@ -142,6 +143,14 @@ Options:
   - `"auto-euk"`, `"auto-prok"`, `"auto"` (auto lineage mode)
   - a dataset name (e.g. `"fungi"` or `"fungi_odb10"`) or
   - a path (e.g. `"/home/user/fungi_odb10"`) 
+
+The main **outputs** of this step are:
+- `quality.tsv`: summary of genomes quality (including completeness,
+  contamination, N50 ...)
+
+### Genomes filtering
+
+- `--skip_filtering`: skip genomes filtering.
 - `--min_completeness`: discard sequences with less than `min_completeness`%
     completeness (default 50). Completeness is computed as the fraction of
     complete BUSCOs genes (single-copy or duplicate) found for a particular
@@ -151,62 +160,67 @@ Options:
     is computed as ``# duplicated BUSCOs / # single-copy BUSCOs``
 
 The main **outputs** of this step are:
-- `quality.tsv`: summary of genomes quality (including completeness,
-  contamination, N50 ...)
 - `filtered`: this folder contains the genomes filtered according to
   `--min_completeness` and `--max_contamination` options
 
 ### Dereplication
-By default, input ("filtered") genomes will be clustered using a defined average
-nucleotide identity (ANI) threshold (by default 99% ANI, parameter `--ani_thr
-0.99`). For each cluster, the genome with the higher score is selected as
-representative. The score will be computed using the following formula:
+In this step, input genomes will be clustered using a defined average nucleotide
+identity (ANI) threshold (by default 99% ANI, parameter `--ani_thr 0.99`). For
+each cluster, the genome with the higher score is selected as representative.
+The score will be computed using the following formula:
 
   ```
   score = completeness - 5 x contamination + 0.5 x log(N50)
   ```
 
-If the quality assessment and filtering were not performed (`--skip_filtering`
-parameter), all the input genomes will be analyzed and the following formula
-will be used:
+If genomes filtering was not performed (`--skip_filtering` parameter), all the
+input genomes will be analyzed and the following formula will be used:
   
   ```
   score =  log(size)
   ```
-
-You can skip this step with the option ``--skip_dereplication``.
 
 The options related to this step are:
 - `--skip_dereplication`: skip the dereplication step
 - `--ani_thr`: ANI threshold for dereplication (> 0.90, default 0.99)
 - `--min_overlap`: minimum overlap fraction between genomes (default 0.3)
 
-The main **outputs** of this step are:
-- `derep_info.tsv`: dereplication summary .
-  This file contains:
+The main **outputs** are:
+- `derep_info.tsv`: dereplication summary, a TSV file containing three columns:
   - Genome: genome filename
   - Cluster: the cluster ID (from 0 to N-1)
   - Representative: is this genome the cluster representative?
-- `filtered_repr`: this folder contains the representative genomes
+- `representatives`: this folder contains the representative genomes
 - `drep`: original data tables, figures and log of dRep.
 
-### Single-copy genes MSA and phylogenetic tree inference
-In this step, the single-copy core genes predicted by BUSCO will be aligned
-using MUSCLE v5in each genome sinCG MSA and phylogenetic tree inference 'auto',
-'auto-prok', 'auto-euk'
+### Single-copy genes (SCG) MSA
+When the BUSCO auto-lineage search is deactivaded (e.g. `--lineage fungi` and
+not `auto`, `auto-prok` or `auto-euk`) the single-copy core genes predicted by
+BUSCO will be aligned using MUSCLE v5.
 
-skip_tree = false                        // skip BUSCO SCG MSA and tree inference (requires "skip_filtering = false")
-    max_ncols = 5000                         // maximum number of MSA columns (taken randomly) tree inference
-    seed_cols = 42                           // random seed
-    raxml_mode = "default"                   // RAxML mode , "default": default RAxML tree search algorithm or
-                                             // "rbs": rapid bootstrapping full analysis
-    raxml_nsearch = 10                       // "default" mode only: number of inferences on the original alignment using
-                                             // distinct randomized MP trees (if ­10 is specified, RAxML will compute 
-                                             // 10 distinct ML trees starting from 10 distinct randomized maximum parsimony
-                                             // starting trees)
-    raxml_nboot = "autoMRE"                  // "rbs" mode only: bootstrap convergence criterion or number of bootstrap 
-                                             // searches (see -I and -#/-N options in RAxML)
+The options related to this step are:
+- `--skip_msa`: skip BUSCO SCG MSA
 
+The main **outputs** are:
+- `sgc/faa`: this folder contains the single-copy genes (SCG, one per FASTA file)
+- `sgc/msa`: contains the MSA for each SCG
+
+### Phylogenetic tree inference (requires `--skip_msa=false`)
+- `--skip_tree` skip phylogenetic tree inference
+- `--max_ncols`: maximum number of MSA columns (taken randomly) for tree inference (default 5000)
+- `--seed_cols`: random seed (default 42)
+- `--raxml_mode`: RAxML mode , "default": default RAxML tree search algorithm or
+    "rbs": rapid bootstrapping full analysis
+    
+    raxml_nsearch = 10
+                                             // "default" mode only: number of
+                                             inferences on the original
+                                             alignment using // distinct
+    randomized MP trees (if ­10 is specified, RAxML will compute // 10 distinct
+                                             ML trees starting from 10 distinct
+randomized maximum parsimony // starting trees) raxml_nboot = "autoMRE"
+// "rbs" mode only: bootstrap convergence criterion or number of bootstrap //
+searches (see -I and -#/-N options in RAxML) tree tree concat_msa trim msa
 
 ### Taxonomy classification and gene prediction
 - `skip_taxonomy`: skip the taxonomy classification (MMseqs2)
