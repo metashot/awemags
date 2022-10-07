@@ -64,7 +64,7 @@ batch infrastructures in the cloud. Main features:
 
 <img
 src=https://github.com/metashot/awemags/blob/master/docs/images/awemags.png
-width="800">
+width="600">
 
 Software included:
 
