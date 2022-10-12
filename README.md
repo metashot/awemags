@@ -26,7 +26,7 @@ editing.
   - [Genomes filtering](#genomes-filtering)
   - [Dereplication](#dereplication)
   - [Single-copy genes (SCG) MSA](#single-copy-genes-scg-msa)
-  - [Phylogenetic tree inference (requires `--skip_msa=false`)](#phylogenetic-tree-inference-requires---skip_msafalse)
+  - [Phylogenetic tree inference (requires MSA)](#phylogenetic-tree-inference-requires-msa)
   - [Taxonomy classification and gene prediction](#taxonomy-classification-and-gene-prediction)
   - [eggNOG](#eggnog)
   - [Resource limits](#resource-limits)
@@ -185,7 +185,7 @@ The options related to this step are:
 - `--ani_thr`: ANI threshold for dereplication (> 0.90, default 0.99)
 - `--min_overlap`: minimum overlap fraction between genomes (default 0.3)
 
-The main **outputs** are:
+Main **outputs**:
 - `derep_info.tsv`: dereplication summary, a TSV file containing three columns:
   - Genome: genome filename
   - Cluster: the cluster ID (from 0 to N-1)
@@ -201,26 +201,40 @@ BUSCO will be aligned using MUSCLE v5.
 The options related to this step are:
 - `--skip_msa`: skip BUSCO SCG MSA
 
-The main **outputs** are:
-- `sgc/faa`: this folder contains the single-copy genes (SCG, one per FASTA file)
+Main **outputs**:
+- `sgc/faa`: this folder contains the single-copy genes (one SCG per FASTA file)
 - `sgc/msa`: contains the MSA for each SCG
 
-### Phylogenetic tree inference (requires `--skip_msa=false`)
+### Phylogenetic tree inference (requires MSA)
+For each SCG MSA, columns represented in <50% of the genomes or columns with
+less than 25% or more than 95% amino acid consensus are trimmed in order to
+remove sites with weak phylogenetic signals[[1]](#1). To reduce total number of
+columns selected for tree inference, the alignment was further trimmed by
+randomly selecting `floor( MAX_NCOLS / N_GENOMES )` columns, where `MAX_NCOLS` is
+the maximum number of columns for the final MSA (parameter `--max_ncols`,
+default 5000) and `N_GENOMES` is the total number of the input genomes. Finally,
+the trimmed MSAs are concatenated into a single MSA and the phylogenomic tree
+is inferred using RAxML.
+
+The options related to this step are:
+
 - `--skip_tree` skip phylogenetic tree inference
-- `--max_ncols`: maximum number of MSA columns (taken randomly) for tree inference (default 5000)
+- `--max_ncols`: maximum number of MSA columns (taken randomly) for tree
+  inference (default 5000)
 - `--seed_cols`: random seed (default 42)
 - `--raxml_mode`: RAxML mode , "default": default RAxML tree search algorithm or
-    "rbs": rapid bootstrapping full analysis
-    
-    raxml_nsearch = 10
-                                             // "default" mode only: number of
-                                             inferences on the original
-                                             alignment using // distinct
-    randomized MP trees (if ­10 is specified, RAxML will compute // 10 distinct
-                                             ML trees starting from 10 distinct
-randomized maximum parsimony // starting trees) raxml_nboot = "autoMRE"
-// "rbs" mode only: bootstrap convergence criterion or number of bootstrap //
-searches (see -I and -#/-N options in RAxML) tree tree concat_msa trim msa
+  "rbs": rapid bootstrapping full analysis
+- `--raxml_nsearch`: "default" mode only: number of inferences on the original
+  alignment using distinct randomized MP trees (if ­10 is specified, RAxML will
+  compute 10 distinct ML trees starting from 10 distinct randomized maximum
+  parsimony starting trees) (default 10)
+- `--raxml_nboot`: "rbs" mode only. Bootstrap convergence criterion or number of
+  bootstrap searches (see -I and -#/-N options in RAxML) (default "autoMRE")
+
+Main **outputs**:
+- `tree/trim_msa`: 
+- `tree/concat.msa.faa`:
+- `tree/...`
 
 ### Taxonomy classification and gene prediction
 - `skip_taxonomy`: skip the taxonomy classification (MMseqs2)
@@ -286,3 +300,8 @@ final output and 2/3 GB for the working directory.
 
 
 mmseqs databases UniProtKB/Swiss-Prot outpath/swissprot tmp
+
+
+<a id="1">[1]</a> Rinke, C., Chuvochina, M., Mussig, A.J. et al. A standardized
+archaeal taxonomy for the Genome Taxonomy Database. Nat Microbiol 6, 946–959
+(2021). https://doi.org/10.1038/s41564-021-00918-8
