@@ -208,7 +208,7 @@ Main **outputs**:
 ### Phylogenetic tree inference (requires MSA)
 For each SCG MSA, columns represented in <50% of the genomes or columns with
 less than 25% or more than 95% amino acid consensus are trimmed in order to
-remove sites with weak phylogenetic signals[[1]](#1). To reduce total number of
+remove sites with weak phylogenetic signals [^1]. To reduce total number of
 columns selected for tree inference, the alignment was further trimmed by
 randomly selecting `floor( MAX_NCOLS / N_GENOMES )` columns, where `MAX_NCOLS` is
 the maximum number of columns for the final MSA (parameter `--max_ncols`,
@@ -275,7 +275,7 @@ directory after the pipeline has finished.
 - `metaeuk`: directory containing the original MetaEuk files (including the
   protein sequences and the GFF files)
 
-### eggNOG
+### eggNOG 
 - `eggnog_*.tsv`: the count matrix for each transferred annotation
 - `eggnog`: directory containing the original eggNOG files
 
@@ -302,6 +302,6 @@ final output and 2/3 GB for the working directory.
 mmseqs databases UniProtKB/Swiss-Prot outpath/swissprot tmp
 
 
-<a id="1">[1]</a> Rinke, C., Chuvochina, M., Mussig, A.J. et al. A standardized
+[^1]: Rinke, C., Chuvochina, M., Mussig, A.J. et al. A standardized
 archaeal taxonomy for the Genome Taxonomy Database. Nat Microbiol 6, 946–959
 (2021). https://doi.org/10.1038/s41564-021-00918-8
