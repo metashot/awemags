@@ -252,7 +252,9 @@ inferred using RAxML. Two modes are available for RAxML:
 #### Outputs
 - `tree/trim_msa`: this folder contains the trimmed MSA for each SCG
 - `tree/concat.msa.faa`: the concatenated MSA used for the tree inference
-- `tree/...`: 
+- `tree/RAxML_bestTree.run`: the best-scoring ML tree of a thorough ML analysis
+- `tree/RAxML_bipartitions.run`: the best-scoring ML tree with the BS support values (from
+  0 to 100, when `--raxml_mode rbs`)
 
 ### Taxonomy classification and gene prediction
 - `skip_taxonomy`: skip the taxonomy classification (MMseqs2)
