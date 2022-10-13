@@ -22,7 +22,10 @@ editing.
   - [Example 2](#example-2)
 - [Documentation](#documentation)
   - [Input and output](#input-and-output)
+    - [Options](#options)
   - [Quality assessment](#quality-assessment)
+    - [Options](#options-1)
+    - [Ouptuts](#ouptuts)
   - [Genomes filtering](#genomes-filtering)
   - [Dereplication](#dereplication)
   - [Single-copy genes (SCG) MSA](#single-copy-genes-scg-msa)
@@ -131,13 +134,13 @@ Options and default values are decladed in [`nextflow.config`](nextflow.config).
 
 ### Input and output
 
-| Option | Description |
-| --- | --- |
-| `--genomes` | input genomes/bins in FASTA format (default `"data/*.fa"`) |
-| `--outdir`: | output directory (default `"results"`) |
+#### Options
+- `--genomes`: input genomes/bins in FASTA format (default `"data/*.fa"`)
+- `--outdir`: output directory (default `"results"`)
 
 ### Quality assessment
 
+#### Options
 - `--busco_db`: BUSCO database path for offline mode. (default 'none': download
     from Internet)
 - `--lineage`: BUSCO lineage or lineage mode (default `"auto-euk"`). Accepted
@@ -146,6 +149,7 @@ Options and default values are decladed in [`nextflow.config`](nextflow.config).
   - a dataset name (e.g. `"fungi"` or `"fungi_odb10"`) or
   - a path (e.g. `"/home/user/fungi_odb10"`) 
 
+#### Ouptuts
 The main **outputs** of this step are:
 - `quality.tsv`: summary of genomes quality (including completeness,
   contamination, N50 ...)
