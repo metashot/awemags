@@ -22,10 +22,7 @@ editing.
   - [Example 2](#example-2)
 - [Documentation](#documentation)
   - [Input and output](#input-and-output)
-    - [Options](#options)
   - [Quality assessment](#quality-assessment)
-    - [Options](#options-1)
-    - [Ouptuts](#ouptuts)
   - [Genomes filtering](#genomes-filtering)
   - [Dereplication](#dereplication)
   - [Single-copy genes (SCG) MSA](#single-copy-genes-scg-msa)
@@ -149,13 +146,13 @@ Options and default values are decladed in [`nextflow.config`](nextflow.config).
   - a dataset name (e.g. `"fungi"` or `"fungi_odb10"`) or
   - a path (e.g. `"/home/user/fungi_odb10"`) 
 
-#### Ouptuts
-The main **outputs** of this step are:
+#### Outputs
 - `quality.tsv`: summary of genomes quality (including completeness,
   contamination, N50 ...)
 
 ### Genomes filtering
 
+#### Options
 - `--skip_filtering`: skip genomes filtering.
 - `--min_completeness`: discard sequences with less than `min_completeness`%
     completeness (default 50). Completeness is computed as the fraction of
@@ -165,7 +162,7 @@ The main **outputs** of this step are:
     contamination (default 10). Contamination (better "redundancy" in this case)
     is computed as ``# duplicated BUSCOs / # single-copy BUSCOs``
 
-The main **outputs** of this step are:
+#### Outputs
 - `filtered`: this folder contains the genomes filtered according to
   `--min_completeness` and `--max_contamination` options
 
@@ -186,12 +183,12 @@ input genomes will be analyzed and the following formula will be used:
   score =  log(size)
   ```
 
-The options related to this step are:
+#### Options
 - `--skip_dereplication`: skip the dereplication step
 - `--ani_thr`: ANI threshold for dereplication (> 0.90, default 0.99)
 - `--min_overlap`: minimum overlap fraction between genomes (default 0.3)
 
-Main **outputs**:
+#### Outputs
 - `derep_info.tsv`: dereplication summary, a TSV file containing three columns:
   - Genome: genome filename
   - Cluster: the cluster ID (from 0 to N-1)
@@ -204,10 +201,10 @@ When the BUSCO auto-lineage search is deactivaded (e.g. `--lineage fungi` and
 not `auto`, `auto-prok` or `auto-euk`) the single-copy core genes predicted by
 BUSCO will be aligned using MUSCLE v5.
 
-The options related to this step are:
+#### Options
 - `--skip_msa`: skip BUSCO SCG MSA
 
-Main **outputs**:
+#### Outputs
 - `sgc/faa`: this folder contains the single-copy genes (one SCG per FASTA file)
 - `sgc/msa`: contains the MSA for each SCG
 
@@ -222,8 +219,7 @@ default 5000) and `N_GENOMES` is the total number of the input genomes. Finally,
 the trimmed MSAs are concatenated into a single MSA and the phylogenomic tree
 is inferred using RAxML.
 
-The options related to this step are:
-
+#### Options
 - `--skip_tree` skip phylogenetic tree inference
 - `--max_ncols`: maximum number of MSA columns (taken randomly) for tree
   inference (default 5000)
@@ -237,7 +233,7 @@ The options related to this step are:
 - `--raxml_nboot`: "rbs" mode only. Bootstrap convergence criterion or number of
   bootstrap searches (see -I and -#/-N options in RAxML) (default "autoMRE")
 
-Main **outputs**:
+#### Outputs
 - `tree/trim_msa`: 
 - `tree/concat.msa.faa`:
 - `tree/...`
