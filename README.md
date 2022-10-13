@@ -211,19 +211,35 @@ BUSCO will be aligned using MUSCLE v5.
 ### Phylogenetic tree inference (requires MSA)
 For each SCG MSA, columns represented in <50% of the genomes or columns with
 less than 25% or more than 95% amino acid consensus are trimmed in order to
-remove sites with weak phylogenetic signals [^1]. To reduce total number of
+remove sites with weak phylogenetic signals[^1]. To reduce total number of
 columns selected for tree inference, the alignment was further trimmed by
-randomly selecting `floor( MAX_NCOLS / N_GENOMES )` columns, where `MAX_NCOLS` is
-the maximum number of columns for the final MSA (parameter `--max_ncols`,
+randomly selecting `floor( MAX_NCOLS / N_GENOMES )` columns, where `MAX_NCOLS`
+is the maximum number of columns for the final MSA (parameter `--max_ncols`,
 default 5000) and `N_GENOMES` is the total number of the input genomes. Finally,
-the trimmed MSAs are concatenated into a single MSA and the phylogenomic tree
-is inferred using RAxML.
+the trimmed MSAs are concatenated into a single MSA and the phylogenomic tree is
+inferred using RAxML. Two modes are available for RAxML:
+- default mode: construct a maximum likelihood (ML) tree. This mode runs the
+  default RAxML tree search algorithm[^2] and perform multiple searches for the
+  best tree (10 distinct randomized MP trees by default, see the parameter
+  `--raxml_nsearch`). The following RAxML parameters will be used:
+
+  ```bash
+  -f d -m PROTGAMMAWAG -N [RAXML_NSEARCH] -p 42
+  ```
+- rbs mode: assess the robustness of inference and construct a ML tree. This
+  mode runs the rapid bootstrapping full analysis[^2]. The bootstrap convergence
+  criterion or the number of bootstrap searches can be specified with the
+  parameter `--raxml_nboot`. The following parameters will be used:
+
+  ```bash
+  -f a -m PROTGAMMAWAG -N [RAXML_NBOOT] -p 42 -x 43
+  ```
 
 #### Options
 - `--skip_tree` skip phylogenetic tree inference
 - `--max_ncols`: maximum number of MSA columns (taken randomly) for tree
   inference (default 5000)
-- `--seed_cols`: random seed (default 42)
+- `--seed_cols`: random seed for the random selection of the columns (default 42)
 - `--raxml_mode`: RAxML mode , "default": default RAxML tree search algorithm or
   "rbs": rapid bootstrapping full analysis
 - `--raxml_nsearch`: "default" mode only: number of inferences on the original
@@ -234,9 +250,9 @@ is inferred using RAxML.
   bootstrap searches (see -I and -#/-N options in RAxML) (default "autoMRE")
 
 #### Outputs
-- `tree/trim_msa`: 
-- `tree/concat.msa.faa`:
-- `tree/...`
+- `tree/trim_msa`: this folder contains the trimmed MSA for each SCG
+- `tree/concat.msa.faa`: the concatenated MSA used for the tree inference
+- `tree/...`: 
 
 ### Taxonomy classification and gene prediction
 - `skip_taxonomy`: skip the taxonomy classification (MMseqs2)
