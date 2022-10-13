@@ -131,8 +131,10 @@ Options and default values are decladed in [`nextflow.config`](nextflow.config).
 
 ### Input and output
 
-- `--genomes`: input genomes/bins in FASTA format (default `"data/*.fa"`)
-- `--outdir`: output directory (default `"results"`)
+| Option | Description |
+| --- | --- |
+| `--genomes` | input genomes/bins in FASTA format (default `"data/*.fa"`) |
+| `--outdir`: | output directory (default `"results"`) |
 
 ### Quality assessment
 
