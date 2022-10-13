@@ -227,7 +227,7 @@ inferred using RAxML. Two modes are available for RAxML:
   -f d -m PROTGAMMAWAG -N [RAXML_NSEARCH] -p 42
   ```
 - rbs mode: assess the robustness of inference and construct a ML tree. This
-  mode runs the rapid bootstrapping full analysis[^2]. The bootstrap convergence
+  mode runs the rapid bootstrapping full analysis[^3]. The bootstrap convergence
   criterion or the number of bootstrap searches can be specified with the
   parameter `--raxml_nboot`. The following parameters will be used:
 
@@ -320,6 +320,13 @@ final output and 2/3 GB for the working directory.
 mmseqs databases UniProtKB/Swiss-Prot outpath/swissprot tmp
 
 
-[^1]: Rinke, C., Chuvochina, M., Mussig, A.J. et al. A standardized
-archaeal taxonomy for the Genome Taxonomy Database. Nat Microbiol 6, 946–959
-(2021). https://doi.org/10.1038/s41564-021-00918-8
+[^1]: Rinke, C., Chuvochina, M., Mussig, A.J. et al. A standardized archaeal
+      taxonomy for the Genome Taxonomy Database. Nat Microbiol 6, 946–959
+      (2021). https://doi.org/10.1038/s41564-021-00918-8
+[^2]: Stamatakis A., Blagojevic F., Nikolopoulos D.S. et al. *Exploring New
+      Search Algorithms and Hardware for Phylogenetics: RAxML Meets the IBM*
+      Cell. J VLSI Sign Process Syst Sign Im 48, 271–286 (2007).
+      [Link](https://doi.org/10.1007/s11265-007-0067-4).  
+[^3]: Stamatakis A., Hoover P., Rougemont J. *A Rapid Bootstrap Algorithm for
+      the RAxML Web Servers*. Systematic Biology, Volume 57, Issue 5, October
+      2008, Pages 758–771, [Link](https://doi.org/10.1080/10635150802429642).
