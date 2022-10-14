@@ -27,7 +27,9 @@ editing.
   - [Dereplication](#dereplication)
   - [Single-copy genes (SCG) MSA](#single-copy-genes-scg-msa)
   - [Phylogenetic tree inference (requires MSA)](#phylogenetic-tree-inference-requires-msa)
-  - [Taxonomy classification and gene prediction](#taxonomy-classification-and-gene-prediction)
+  - [Taxonomic classification](#taxonomic-classification)
+  - [Gene discovery/prediction](#gene-discoveryprediction)
+  - [MMseqs2 database](#mmseqs2-database)
   - [eggNOG](#eggnog)
   - [Resource limits](#resource-limits)
 - [Output](#output)
@@ -256,15 +258,42 @@ inferred using RAxML. Two modes are available for RAxML:
 - `tree/RAxML_bipartitions.run`: the best-scoring ML tree with the BS support values (from
   0 to 100, when `--raxml_mode rbs`)
 
-### Taxonomy classification and gene prediction
-- `skip_taxonomy`: skip the taxonomy classification (MMseqs2)
-- `skip_genepred`: skip the gene prediction (MetaEuk)
+### Taxonomic classification 
+This step takes advantage of the MMseqs2 easy-taxonomy workflow to predict the
+taxonomy of each input genome. Before classification and for each genome,
+contigs are concatenated into a single pseudochromosome using the sequence
+`NNNNNCATTCCATTCATTAATTAATTAATGAATGAATGNNNNN` as separator, which provides a
+stop codon and a start site in all six reading frames[^4].
+
+This step requires a MMseqs2 database augmented with taxonomic information (see
+[MMseqs2 database](mmseqs2-database)).
+
+#### Options
+- `skip_taxonomy`: skip the taxonomic classification
+
+#### Outputs
+- `mmseqs`: this folder contains the original MMseqs2 output for each input
+  genome
+- `taxonomy.tsv`: a single TSV file containing the classification summary
+
+### Gene discovery/prediction
+Gene prediction is performed using the MetaEuk easy-predict workflow.  
+
+This step requires a MMseqs2 database (see [MMseqs2 database](mmseqs2-database)).
+
+#### Options
+- `skip_genepred`: skip the gene prediction 
+
+#### Outputs
+
+### MMseqs2 database
+The available databases are listed at https://github.com/soedinglab/mmseqs2/wiki#downloading-databases (default
+  "UniProtKB/Swiss-Prot")
+  
 - `mmseqs_db`: MMseqs2 database path (used by MMseqs2 and MetaEuk) (default
   "none": download from Internet). See the `mmseqs_db_name` parameter.
 - `mmseqs_db_name`: MMseqs2 database name, used when mmseqs_db_path = "none".  
-  The available databases are listed at
-  https://github.com/soedinglab/mmseqs2/wiki#downloading-databases (default
-  "UniProtKB/Swiss-Prot")
+  
 
 ### eggNOG
 - `skip_eggnog`: skip eggNOG annotation
@@ -322,8 +351,8 @@ final output and 2/3 GB for the working directory.
 mmseqs databases UniProtKB/Swiss-Prot outpath/swissprot tmp
 
 
-[^1]: Rinke, C., Chuvochina, M., Mussig, A.J. et al. A standardized archaeal
-      taxonomy for the Genome Taxonomy Database. Nat Microbiol 6, 946–959
+[^1]: Rinke, C., Chuvochina, M., Mussig, A.J. et al. *A standardized archaeal
+      taxonomy for the Genome Taxonomy Database*. Nat Microbiol 6, 946–959
       (2021). https://doi.org/10.1038/s41564-021-00918-8
 [^2]: Stamatakis A., Blagojevic F., Nikolopoulos D.S. et al. *Exploring New
       Search Algorithms and Hardware for Phylogenetics: RAxML Meets the IBM*
@@ -332,3 +361,8 @@ mmseqs databases UniProtKB/Swiss-Prot outpath/swissprot tmp
 [^3]: Stamatakis A., Hoover P., Rougemont J. *A Rapid Bootstrap Algorithm for
       the RAxML Web Servers*. Systematic Biology, Volume 57, Issue 5, October
       2008, Pages 758–771, [Link](https://doi.org/10.1080/10635150802429642).
+[^4]: Tettelin, Hervé, et al. *Genome analysis of multiple pathogenic isolates
+      of Streptococcus agalactiae: implications for the microbial "pan-genome".*
+      Proceedings of the National Academy of Sciences 102.39 (2005):
+      13950-13955. https://www.pnas.org/doi/10.1073/pnas.0506758102
+

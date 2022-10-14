@@ -81,7 +81,7 @@ process format_mmseqs_lca {
 }
 
 process merge_eggnog_mapper {      
-    publishDir "${params.outdir}" , mode: 'copy'
+    publishDir "${params.outdir}/eggnog_tables" , mode: 'copy'
 
     input:
     path(annotations)
