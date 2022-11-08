@@ -272,8 +272,8 @@ This step requires a MMseqs2 database augmented with taxonomic information (see
 - `skip_taxonomy`: skip the taxonomic classification
 
 #### Outputs
-- `mmseqs`: this folder contains the original MMseqs2 output for each input
-  genome
+- `mmseqs`: directory containing the original MMseqs2 taxonomy files (including
+  the Kraken style reports)
 - `taxonomy.tsv`: a single TSV file containing the classification summary
 
 ### Gene discovery/prediction
@@ -285,16 +285,19 @@ This step requires a MMseqs2 database (see [MMseqs2 database](mmseqs2-database))
 - `skip_genepred`: skip the gene prediction 
 
 #### Outputs
+- `metaeuk`: directory containing the original MetaEuk files (including the
+  predicted protein sequences and the GFF files)
 
 ### MMseqs2 database
-The available databases are listed at https://github.com/soedinglab/mmseqs2/wiki#downloading-databases (default
+The available databases are listed at
+  https://github.com/soedinglab/mmseqs2/wiki#downloading-databases (default
   "UniProtKB/Swiss-Prot")
   
+#### Options
 - `mmseqs_db`: MMseqs2 database path (used by MMseqs2 and MetaEuk) (default
   "none": download from Internet). See the `mmseqs_db_name` parameter.
 - `mmseqs_db_name`: MMseqs2 database name, used when mmseqs_db_path = "none".  
   
-
 ### eggNOG
 - `skip_eggnog`: skip eggNOG annotation
 - `eggnog_db`: eggNOG v5.0 database dir. (default "none": download from

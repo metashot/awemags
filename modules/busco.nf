@@ -83,8 +83,15 @@ process busco {
         EXIT_MSG='ERROR:busco.BuscoDownloadManager'
         grep -q "\$EXIT_MSG" \$BUSCO_LOG
         if [ "\$?" -eq 0 ]; then
-            echo "Cannot reach the database." >> ${id}/exit_info.txt
+            echo "Cannot reach the online database." >> ${id}/exit_info.txt
             exit 1
+        fi
+
+        EXIT_MSG='busco.Exceptions.BuscoError: Metaeuk did not recognize any genes'
+        grep -q "\$EXIT_MSG" \$BUSCO_LOG
+        if [ "\$?" -eq 0 ]; then
+            echo "BUSCO did not recognize any genes." >> ${id}/exit_info.txt
+            exit 0
         fi
 
     fi
