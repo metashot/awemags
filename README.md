@@ -50,18 +50,18 @@ supports Nextflow, [Docker](https://www.docker.com/) or
 batch infrastructures in the cloud. Main features:
 
 - Completeness, contamination estimates and basic assambly statistics using
-  [BUSCO](https://busco.ezlab.org/)[^BUSCO] v5 and
+  [BUSCO](https://busco.ezlab.org/)[^busco] v5 and
   [BBTools](https://jgi.doe.gov/data-and-tools/software-tools/bbtools/);
-- Dereplication with [dRep](https://github.com/MrOlm/drep)[^DREP];
+- Dereplication with [dRep](https://github.com/MrOlm/drep)[^drep];
 - Multiple sequence alignment (MSA) of BUSCO single copy genes (SGCs) with
-  [MUSCLE](https://drive5.com/muscle5/)[^MUSCLE5] v5; phylogenetic tree inference with
-  [RAxML](https://cme.h-its.org/exelixis/web/software/raxml/)[^RAXML]; 
+  [MUSCLE](https://drive5.com/muscle5/)[^muscle5] v5; phylogenetic tree inference with
+  [RAxML](https://cme.h-its.org/exelixis/web/software/raxml/)[^raxml]; 
 - Fast taxonomic classification using [MMseqs2
-  taxonomy](https://github.com/soedinglab/MMseqs2)[^MMSEQS2];
+  taxonomy](https://github.com/soedinglab/MMseqs2)[^mmseqs2];
 - Sensitive, reference-based gene discovery with
-  [MetaEuk](https://github.com/soedinglab/metaeuk)[^METAEUK];
+  [MetaEuk](https://github.com/soedinglab/metaeuk)[^metaeuk];
 - Fast functional annotation using
-  [EggNOG-mapper](https://github.com/eggnogdb/eggnog-mapper)[^EGGNOG_MAPPER];
+  [EggNOG-mapper](https://github.com/eggnogdb/eggnog-mapper)[^eggnog_mapper];
 - Internal transcriber spacers extraction using ITSx
 - Automatic download of databases;
 - Summary tables for genome quality, taxonomy predictions and functional
@@ -214,7 +214,7 @@ BUSCO will be aligned using MUSCLE v5.
 ### Phylogenetic tree inference (requires MSA)
 For each SCG MSA, columns represented in <50% of the genomes or columns with
 less than 25% or more than 95% amino acid consensus are trimmed in order to
-remove sites with weak phylogenetic signals[^GTDB_ARC]. To reduce total number of
+remove sites with weak phylogenetic signals[gtdb_arc]. To reduce total number of
 columns selected for tree inference, the alignment was further trimmed by
 randomly selecting `floor( MAX_NCOLS / N_GENOMES )` columns, where `MAX_NCOLS`
 is the maximum number of columns for the final MSA (parameter `--max_ncols`,
@@ -222,7 +222,7 @@ default 5000) and `N_GENOMES` is the total number of the input genomes. Finally,
 the trimmed MSAs are concatenated into a single MSA and the phylogenomic tree is
 inferred using RAxML. Two modes are available for RAxML:
 - default mode: construct a maximum likelihood (ML) tree. This mode runs the
-  default RAxML tree search algorithm[^RAXML_SEARCH] and perform multiple
+  default RAxML tree search algorithm[^raxml_search] and perform multiple
   searches for the best tree (10 distinct randomized MP trees by default, see
   the parameter `--raxml_nsearch`). The following RAxML parameters will be used:
 
@@ -230,7 +230,7 @@ inferred using RAxML. Two modes are available for RAxML:
   -f d -m PROTGAMMAWAG -N [RAXML_NSEARCH] -p 42
   ```
 - rbs mode: assess the robustness of inference and construct a ML tree. This
-  mode runs the rapid bootstrapping full analysis[^RAXML_BOOTSTRAP]. The
+  mode runs the rapid bootstrapping full analysis[^raxml_bootstrap]. The
   bootstrap convergence criterion or the number of bootstrap searches can be
   specified with the parameter `--raxml_nboot`. The following parameters will be
   used:
@@ -265,7 +265,7 @@ This step takes advantage of the MMseqs2 easy-taxonomy workflow to predict the
 taxonomy of each input genome. Before classification and for each genome,
 contigs are concatenated into a single pseudochromosome using the sequence
 `NNNNNCATTCCATTCATTAATTAATTAATGAATGAATGNNNNN` as separator, which provides a
-stop codon and a start site in all six reading frames[^SAGALACTIAE].
+stop codon and a start site in all six reading frames[^sagalactiae].
 
 This step requires a MMseqs2 database augmented with taxonomic information (see
 [MMseqs2 database](mmseqs2-database)).
@@ -357,54 +357,54 @@ mmseqs databases UniProtKB/Swiss-Prot outpath/swissprot tmp
 
 ## References
 
-[^BUSCO]: Manni, Mosè, Matthew R. Berkeley, Mathieu Seppey, Felipe A. Simão, and
+[^busco]: Manni, Mosè, Matthew R. Berkeley, Mathieu Seppey, Felipe A. Simão, and
     Evgeny M. Zdobnov. 2021. “BUSCO Update: Novel and Streamlined Workflows
     along with Broader and Deeper Phylogenetic Coverage for Scoring of
     Eukaryotic, Prokaryotic, and Viral Genomes.” Molecular Biology and Evolution
     38 (10): 4647–54.
 
-[^EGGNOG_MAPPER]: Cantalapiedra, Carlos P., Ana Hernández-Plaza, Ivica Letunic, Peer
+[^eggnog_mapper]: Cantalapiedra, Carlos P., Ana Hernández-Plaza, Ivica Letunic, Peer
     Bork, and Jaime Huerta-Cepas. 2021. “eggNOG-Mapper v2: Functional
     Annotation,Orthology Assignments, and Domain Prediction at the Metagenomic
     Scale.” Molecular Biology and Evolution 38 (12): 5825–29.
     
-[^MUSCLE5]: Edgar, Robert C. 2022. “High-Accuracy Alignment Ensembles Enable
+[^muscle5]: Edgar, Robert C. 2022. “High-Accuracy Alignment Ensembles Enable
     Unbiased Assessments of Sequence Homology and Phylogeny.” bioRxiv.
     https://doi.org/10.1101/2021.06.20.449169.
 
-[^METAEUK]: Karin, Eli Levy, Milot Mirdita, and Johannes Söding. 2020.
+[^metaeuk]: Karin, Eli Levy, Milot Mirdita, and Johannes Söding. 2020.
     “MetaEuk—sensitive, High-Throughput Gene Discovery, and Annotation for
     Large-Scale Eukaryotic Metagenomics.” Microbiome.
     https://doi.org/10.1186/s40168-020-00808-x.
 
-[^DREP]: Olm, Matthew R., Christopher T. Brown, Brandon Brooks, and Jillian F.
+[^drep]: Olm, Matthew R., Christopher T. Brown, Brandon Brooks, and Jillian F.
     Banfield. 2017. “dRep: A Tool for Fast and Accurate Genomic Comparisons That
     Enables Improved Genome Recovery from Metagenomes through de-Replication.”
     The ISME Journal 11 (12): 2864–68.
 
-[^RAXML]: Stamatakis, Alexandros. 2014. “RAxML Version 8: A Tool for
+[^raxml]: Stamatakis, Alexandros. 2014. “RAxML Version 8: A Tool for
     Phylogenetic Analysis and Post-Analysis of Large Phylogenies.”
     Bioinformatics 30 (9): 1312–13.
     
-[^MMSEQS2]: Steinegger, Martin, and Johannes Söding. “MMseqs2 Enables Sensitive
+[^mmseqs2]: Steinegger, Martin, and Johannes Söding. “MMseqs2 Enables Sensitive
     Protein Sequence Searching for the Analysis of Massive Data Sets.” Nature
     Biotechnology 35 (11): 1026–28.
 
-[^GTDB_ARC]: Rinke, C., Chuvochina, M., Mussig, A.J. et al. *A standardized
+[^gtdb_arc]: Rinke, C., Chuvochina, M., Mussig, A.J. et al. *A standardized
       archaeal taxonomy for the Genome Taxonomy Database*. Nat Microbiol 6,
       946–959 (2021). https://doi.org/10.1038/s41564-021-00918-8
 
-[^RAXML_SEARCH]: Stamatakis A., Blagojevic F., Nikolopoulos D.S. et al.
+[^raxml_search]: Stamatakis A., Blagojevic F., Nikolopoulos D.S. et al.
       *Exploring New Search Algorithms and Hardware for Phylogenetics: RAxML
       Meets the IBM* Cell. J VLSI Sign Process Syst Sign Im 48, 271–286 (2007).
       [Link](https://doi.org/10.1007/s11265-007-0067-4).
 
-[^RAXML_BOOTSTRAP]: Stamatakis A., Hoover P., Rougemont J. *A Rapid Bootstrap
+[^raxml_bootstrap]: Stamatakis A., Hoover P., Rougemont J. *A Rapid Bootstrap
       Algorithm for the RAxML Web Servers*. Systematic Biology, Volume 57, Issue
       5, October 2008, Pages 758–771,
       [Link](https://doi.org/10.1080/10635150802429642).
 
-[^SAGALACTIAE]: Tettelin, Hervé, et al. *Genome analysis of multiple pathogenic isolates
+[^sagalactiae]: Tettelin, Hervé, et al. *Genome analysis of multiple pathogenic isolates
       of Streptococcus agalactiae: implications for the microbial "pan-genome".*
       Proceedings of the National Academy of Sciences 102.39 (2005):
       13950-13955. https://www.pnas.org/doi/10.1073/pnas.0506758102
