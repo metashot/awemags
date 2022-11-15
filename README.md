@@ -39,6 +39,7 @@ editing.
 - [System requirements](#system-requirements)
   - [Memory](#memory)
   - [Disk](#disk)
+- [References](#references)
 
 ## Main features
 aweMAGs is a container-enabled [Nextflow](https://www.nextflow.io/) pipeline for
@@ -213,7 +214,7 @@ BUSCO will be aligned using MUSCLE v5.
 ### Phylogenetic tree inference (requires MSA)
 For each SCG MSA, columns represented in <50% of the genomes or columns with
 less than 25% or more than 95% amino acid consensus are trimmed in order to
-remove sites with weak phylogenetic signals[^1]. To reduce total number of
+remove sites with weak phylogenetic signals[^GTDB_ARC]. To reduce total number of
 columns selected for tree inference, the alignment was further trimmed by
 randomly selecting `floor( MAX_NCOLS / N_GENOMES )` columns, where `MAX_NCOLS`
 is the maximum number of columns for the final MSA (parameter `--max_ncols`,
@@ -221,17 +222,18 @@ default 5000) and `N_GENOMES` is the total number of the input genomes. Finally,
 the trimmed MSAs are concatenated into a single MSA and the phylogenomic tree is
 inferred using RAxML. Two modes are available for RAxML:
 - default mode: construct a maximum likelihood (ML) tree. This mode runs the
-  default RAxML tree search algorithm[^2] and perform multiple searches for the
-  best tree (10 distinct randomized MP trees by default, see the parameter
-  `--raxml_nsearch`). The following RAxML parameters will be used:
+  default RAxML tree search algorithm[^RAXML_SEARCH] and perform multiple
+  searches for the best tree (10 distinct randomized MP trees by default, see
+  the parameter `--raxml_nsearch`). The following RAxML parameters will be used:
 
   ```bash
   -f d -m PROTGAMMAWAG -N [RAXML_NSEARCH] -p 42
   ```
 - rbs mode: assess the robustness of inference and construct a ML tree. This
-  mode runs the rapid bootstrapping full analysis[^3]. The bootstrap convergence
-  criterion or the number of bootstrap searches can be specified with the
-  parameter `--raxml_nboot`. The following parameters will be used:
+  mode runs the rapid bootstrapping full analysis[^RAXML_BOOTSTRAP]. The
+  bootstrap convergence criterion or the number of bootstrap searches can be
+  specified with the parameter `--raxml_nboot`. The following parameters will be
+  used:
 
   ```bash
   -f a -m PROTGAMMAWAG -N [RAXML_NBOOT] -p 42 -x 43
@@ -263,7 +265,7 @@ This step takes advantage of the MMseqs2 easy-taxonomy workflow to predict the
 taxonomy of each input genome. Before classification and for each genome,
 contigs are concatenated into a single pseudochromosome using the sequence
 `NNNNNCATTCCATTCATTAATTAATTAATGAATGAATGNNNNN` as separator, which provides a
-stop codon and a start site in all six reading frames[^4].
+stop codon and a start site in all six reading frames[^SAGALACTIAE].
 
 This step requires a MMseqs2 database augmented with taxonomic information (see
 [MMseqs2 database](mmseqs2-database)).
@@ -353,7 +355,7 @@ final output and 2/3 GB for the working directory.
 
 mmseqs databases UniProtKB/Swiss-Prot outpath/swissprot tmp
 
-###References
+## References
 
 [^BUSCO]: Manni, Mosè, Matthew R. Berkeley, Mathieu Seppey, Felipe A. Simão, and
     Evgeny M. Zdobnov. 2021. “BUSCO Update: Novel and Streamlined Workflows
@@ -388,17 +390,21 @@ mmseqs databases UniProtKB/Swiss-Prot outpath/swissprot tmp
     Protein Sequence Searching for the Analysis of Massive Data Sets.” Nature
     Biotechnology 35 (11): 1026–28.
 
-[^1]: Rinke, C., Chuvochina, M., Mussig, A.J. et al. *A standardized archaeal
-      taxonomy for the Genome Taxonomy Database*. Nat Microbiol 6, 946–959
-      (2021). https://doi.org/10.1038/s41564-021-00918-8
-[^2]: Stamatakis A., Blagojevic F., Nikolopoulos D.S. et al. *Exploring New
-      Search Algorithms and Hardware for Phylogenetics: RAxML Meets the IBM*
-      Cell. J VLSI Sign Process Syst Sign Im 48, 271–286 (2007).
-      [Link](https://doi.org/10.1007/s11265-007-0067-4).  
-[^3]: Stamatakis A., Hoover P., Rougemont J. *A Rapid Bootstrap Algorithm for
-      the RAxML Web Servers*. Systematic Biology, Volume 57, Issue 5, October
-      2008, Pages 758–771, [Link](https://doi.org/10.1080/10635150802429642).
-[^4]: Tettelin, Hervé, et al. *Genome analysis of multiple pathogenic isolates
+[^GTDB_ARC]: Rinke, C., Chuvochina, M., Mussig, A.J. et al. *A standardized
+      archaeal taxonomy for the Genome Taxonomy Database*. Nat Microbiol 6,
+      946–959 (2021). https://doi.org/10.1038/s41564-021-00918-8
+
+[^RAXML_SEARCH]: Stamatakis A., Blagojevic F., Nikolopoulos D.S. et al.
+      *Exploring New Search Algorithms and Hardware for Phylogenetics: RAxML
+      Meets the IBM* Cell. J VLSI Sign Process Syst Sign Im 48, 271–286 (2007).
+      [Link](https://doi.org/10.1007/s11265-007-0067-4).
+
+[^RAXML_BOOTSTRAP]: Stamatakis A., Hoover P., Rougemont J. *A Rapid Bootstrap
+      Algorithm for the RAxML Web Servers*. Systematic Biology, Volume 57, Issue
+      5, October 2008, Pages 758–771,
+      [Link](https://doi.org/10.1080/10635150802429642).
+
+[^SAGALACTIAE]: Tettelin, Hervé, et al. *Genome analysis of multiple pathogenic isolates
       of Streptococcus agalactiae: implications for the microbial "pan-genome".*
       Proceedings of the National Academy of Sciences 102.39 (2005):
       13950-13955. https://www.pnas.org/doi/10.1073/pnas.0506758102
