@@ -42,14 +42,14 @@ editing.
 
 ## Main features
 aweMAGs is a container-enabled [Nextflow](https://www.nextflow.io/) pipeline for
-quality assessment, dereplication, gene discovery, taxonomic and functional
-annotation of eukariotic MAGs. It can run out-of-the-box on any platform that
+an automated quality assessment, dereplication, gene discovery, taxonomic and functional
+annotation of eukariotic genomes/MAGs. It can run out-of-the-box on any platform that
 supports Nextflow, [Docker](https://www.docker.com/) or
 [Singularity](https://sylabs.io/singularity), including computing clusters or
 batch infrastructures in the cloud. Main features:
 
 - Completeness, contamination estimates and basic assambly statistics using
-  [BUSCO](https://busco.ezlab.org/) v5 and
+  [BUSCO](https://busco.ezlab.org/)[^BUSCO] v5 and
   [BBTools](https://jgi.doe.gov/data-and-tools/software-tools/bbtools/);
 - Dereplication with [dRep](https://github.com/MrOlm/drep);
 - Multiple sequence alignment (MSA) of BUSCO single copy genes (SGCs) with
@@ -353,7 +353,11 @@ final output and 2/3 GB for the working directory.
 
 mmseqs databases UniProtKB/Swiss-Prot outpath/swissprot tmp
 
-
+[^BUSCO]: Manni, Mosè, Matthew R. Berkeley, Mathieu Seppey, Felipe A. Simão, and
+    Evgeny M. Zdobnov. 2021. “BUSCO Update: Novel and Streamlined Workflows
+    along with Broader and Deeper Phylogenetic Coverage for Scoring of
+    Eukaryotic, Prokaryotic, and Viral Genomes.” Molecular Biology and Evolution
+    38 (10): 4647–54.
 [^1]: Rinke, C., Chuvochina, M., Mussig, A.J. et al. *A standardized archaeal
       taxonomy for the Genome Taxonomy Database*. Nat Microbiol 6, 946–959
       (2021). https://doi.org/10.1038/s41564-021-00918-8
