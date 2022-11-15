@@ -51,16 +51,16 @@ batch infrastructures in the cloud. Main features:
 - Completeness, contamination estimates and basic assambly statistics using
   [BUSCO](https://busco.ezlab.org/)[^BUSCO] v5 and
   [BBTools](https://jgi.doe.gov/data-and-tools/software-tools/bbtools/);
-- Dereplication with [dRep](https://github.com/MrOlm/drep);
+- Dereplication with [dRep](https://github.com/MrOlm/drep)[^DREP];
 - Multiple sequence alignment (MSA) of BUSCO single copy genes (SGCs) with
-  [MUSCLE](https://drive5.com/muscle5/) v5; phylogenetic tree inference with
-  [RAxML](https://cme.h-its.org/exelixis/web/software/raxml/); 
+  [MUSCLE](https://drive5.com/muscle5/)[^MUSCLE5] v5; phylogenetic tree inference with
+  [RAxML](https://cme.h-its.org/exelixis/web/software/raxml/)[^RAXML]; 
 - Fast taxonomic classification using [MMseqs2
-  taxonomy](https://github.com/soedinglab/MMseqs2);
+  taxonomy](https://github.com/soedinglab/MMseqs2)[^MMSEQS2];
 - Sensitive, reference-based gene discovery with
-  [MetaEuk](https://github.com/soedinglab/metaeuk);
+  [MetaEuk](https://github.com/soedinglab/metaeuk)[^METAEUK];
 - Fast functional annotation using
-  [EggNOG-mapper](https://github.com/eggnogdb/eggnog-mapper);
+  [EggNOG-mapper](https://github.com/eggnogdb/eggnog-mapper)[^EGGNOG_MAPPER];
 - Internal transcriber spacers extraction using ITSx
 - Automatic download of databases;
 - Summary tables for genome quality, taxonomy predictions and functional
@@ -353,11 +353,41 @@ final output and 2/3 GB for the working directory.
 
 mmseqs databases UniProtKB/Swiss-Prot outpath/swissprot tmp
 
+###References
+
 [^BUSCO]: Manni, Mosè, Matthew R. Berkeley, Mathieu Seppey, Felipe A. Simão, and
     Evgeny M. Zdobnov. 2021. “BUSCO Update: Novel and Streamlined Workflows
     along with Broader and Deeper Phylogenetic Coverage for Scoring of
     Eukaryotic, Prokaryotic, and Viral Genomes.” Molecular Biology and Evolution
     38 (10): 4647–54.
+
+[^EGGNOG_MAPPER]: Cantalapiedra, Carlos P., Ana Hernández-Plaza, Ivica Letunic, Peer
+    Bork, and Jaime Huerta-Cepas. 2021. “eggNOG-Mapper v2: Functional
+    Annotation,Orthology Assignments, and Domain Prediction at the Metagenomic
+    Scale.” Molecular Biology and Evolution 38 (12): 5825–29.
+    
+[^MUSCLE5]: Edgar, Robert C. 2022. “High-Accuracy Alignment Ensembles Enable
+    Unbiased Assessments of Sequence Homology and Phylogeny.” bioRxiv.
+    https://doi.org/10.1101/2021.06.20.449169.
+
+[^METAEUK]: Karin, Eli Levy, Milot Mirdita, and Johannes Söding. 2020.
+    “MetaEuk—sensitive, High-Throughput Gene Discovery, and Annotation for
+    Large-Scale Eukaryotic Metagenomics.” Microbiome.
+    https://doi.org/10.1186/s40168-020-00808-x.
+
+[^DREP]: Olm, Matthew R., Christopher T. Brown, Brandon Brooks, and Jillian F.
+    Banfield. 2017. “dRep: A Tool for Fast and Accurate Genomic Comparisons That
+    Enables Improved Genome Recovery from Metagenomes through de-Replication.”
+    The ISME Journal 11 (12): 2864–68.
+
+[^RAXML]: Stamatakis, Alexandros. 2014. “RAxML Version 8: A Tool for
+    Phylogenetic Analysis and Post-Analysis of Large Phylogenies.”
+    Bioinformatics 30 (9): 1312–13.
+    
+[^MMSEQS2]: Steinegger, Martin, and Johannes Söding. “MMseqs2 Enables Sensitive
+    Protein Sequence Searching for the Analysis of Massive Data Sets.” Nature
+    Biotechnology 35 (11): 1026–28.
+
 [^1]: Rinke, C., Chuvochina, M., Mussig, A.J. et al. *A standardized archaeal
       taxonomy for the Genome Taxonomy Database*. Nat Microbiol 6, 946–959
       (2021). https://doi.org/10.1038/s41564-021-00918-8
