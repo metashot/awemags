@@ -30,15 +30,9 @@ editing.
   - [Taxonomic classification](#taxonomic-classification)
   - [Gene discovery/prediction](#gene-discoveryprediction)
   - [MMseqs2 database](#mmseqs2-database)
-  - [eggNOG](#eggnog)
+  - [EggNOG](#eggnog)
   - [Resource limits](#resource-limits)
-- [Output](#output)
-  - [Taxonomy classification](#taxonomy-classification)
-  - [Gene prediction](#gene-prediction)
-  - [eggNOG](#eggnog-1)
 - [System requirements](#system-requirements)
-  - [Memory](#memory)
-  - [Disk](#disk)
 - [References](#references)
 
 ## Main features
@@ -135,25 +129,33 @@ Options and default values are decladed in [`nextflow.config`](nextflow.config).
 ### Input and output
 
 #### Options
-- `--genomes`: input genomes/bins in FASTA format (default `"data/*.fa"`)
-- `--outdir`: output directory (default `"results"`)
+- `--genomes`: input genomes/bins in FASTA format (default `"data/*.fa"`).
+- `--outdir`: output directory (default `"results"`).
 
 ### Quality assessment
+Quality assessment is performed for each input genome/metagenomic bin using
+BUSCO v5 and the BBTools's statswrapper program.
 
 #### Options
 - `--busco_db`: BUSCO database path for offline mode. (default 'none': download
-    from Internet)
+    from Internet).
 - `--lineage`: BUSCO lineage or lineage mode (default `"auto-euk"`). Accepted
   values are:
   - `"auto-euk"`, `"auto-prok"`, `"auto"` (auto lineage mode)
   - a dataset name (e.g. `"fungi"` or `"fungi_odb10"`) or
-  - a path (e.g. `"/home/user/fungi_odb10"`) 
+  - a path (e.g. `"/home/user/fungi_odb10"`) .
 
 #### Outputs
+Main:
 - `quality.tsv`: summary of genomes quality (including completeness,
-  contamination, N50 ...)
+  contamination, N50 ...).
+Secondary:
+- `busco`: main BUSCO's original output files.
+- `statswrapper`: original BBTools's statswrapper output.
 
 ### Genomes filtering
+This step discards sequences that do not meet the filtering
+(completeness/contamination) criteria.
 
 #### Options
 - `--skip_filtering`: skip genomes filtering.
@@ -163,11 +165,11 @@ Options and default values are decladed in [`nextflow.config`](nextflow.config).
     lineage.
 - `--max_contamination`: discard sequences with more than `max_contamination`%
     contamination (default 10). Contamination (better "redundancy" in this case)
-    is computed as ``# duplicated BUSCOs / # single-copy BUSCOs``
+    is computed as ``# duplicated BUSCOs / # complete BUSCOs``.
 
 #### Outputs
 - `filtered`: this folder contains the genomes filtered according to
-  `--min_completeness` and `--max_contamination` options
+  `--min_completeness` and `--max_contamination` options.
 
 ### Dereplication
 In this step, input genomes will be clustered using a defined average nucleotide
@@ -187,16 +189,18 @@ input genomes will be analyzed and the following formula will be used:
   ```
 
 #### Options
-- `--skip_dereplication`: skip the dereplication step
-- `--ani_thr`: ANI threshold for dereplication (> 0.90, default 0.99)
-- `--min_overlap`: minimum overlap fraction between genomes (default 0.3)
+- `--skip_dereplication`: skip the dereplication step.
+- `--ani_thr`: ANI threshold for dereplication (> 0.90, default 0.99).
+- `--min_overlap`: minimum overlap fraction between genomes (default 0.3).
 
 #### Outputs
+Main:
 - `derep_info.tsv`: dereplication summary, a TSV file containing three columns:
   - Genome: genome filename
   - Cluster: the cluster ID (from 0 to N-1)
   - Representative: is this genome the cluster representative?
 - `representatives`: this folder contains the representative genomes
+Secondary:
 - `drep`: original data tables, figures and log of dRep.
 
 ### Single-copy genes (SCG) MSA
@@ -214,13 +218,14 @@ BUSCO will be aligned using MUSCLE v5.
 ### Phylogenetic tree inference (requires MSA)
 For each SCG MSA, columns represented in <50% of the genomes or columns with
 less than 25% or more than 95% amino acid consensus are trimmed in order to
-remove sites with weak phylogenetic signals[gtdb_arc]. To reduce total number of
+remove sites with weak phylogenetic signals[^gtdb_arc]. To reduce total number of
 columns selected for tree inference, the alignment was further trimmed by
 randomly selecting `floor( MAX_NCOLS / N_GENOMES )` columns, where `MAX_NCOLS`
 is the maximum number of columns for the final MSA (parameter `--max_ncols`,
 default 5000) and `N_GENOMES` is the total number of the input genomes. Finally,
 the trimmed MSAs are concatenated into a single MSA and the phylogenomic tree is
 inferred using RAxML. Two modes are available for RAxML:
+
 - default mode: construct a maximum likelihood (ML) tree. This mode runs the
   default RAxML tree search algorithm[^raxml_search] and perform multiple
   searches for the best tree (10 distinct randomized MP trees by default, see
@@ -240,30 +245,31 @@ inferred using RAxML. Two modes are available for RAxML:
   ```
 
 #### Options
-- `--skip_tree` skip phylogenetic tree inference
+- `--skip_tree` skip phylogenetic tree inference.
 - `--max_ncols`: maximum number of MSA columns (taken randomly) for tree
-  inference (default 5000)
-- `--seed_cols`: random seed for the random selection of the columns (default 42)
+  inference (default 5000).
+- `--seed_cols`: random seed for the random selection of the columns (default
+  42).
 - `--raxml_mode`: RAxML mode , "default": default RAxML tree search algorithm or
-  "rbs": rapid bootstrapping full analysis
+  "rbs": rapid bootstrapping full analysis.
 - `--raxml_nsearch`: "default" mode only: number of inferences on the original
   alignment using distinct randomized MP trees (if ­10 is specified, RAxML will
   compute 10 distinct ML trees starting from 10 distinct randomized maximum
-  parsimony starting trees) (default 10)
+  parsimony starting trees) (default 10).
 - `--raxml_nboot`: "rbs" mode only. Bootstrap convergence criterion or number of
-  bootstrap searches (see -I and -#/-N options in RAxML) (default "autoMRE")
+  bootstrap searches (see -I and -#/-N options in RAxML) (default "autoMRE").
 
 #### Outputs
-- `tree/trim_msa`: this folder contains the trimmed MSA for each SCG
-- `tree/concat.msa.faa`: the concatenated MSA used for the tree inference
-- `tree/RAxML_bestTree.run`: the best-scoring ML tree of a thorough ML analysis
-- `tree/RAxML_bipartitions.run`: the best-scoring ML tree with the BS support values (from
-  0 to 100, when `--raxml_mode rbs`)
+- `tree/trim_msa`: this folder contains the trimmed MSA for each SCG.
+- `tree/concat.msa.faa`: the concatenated MSA used for the tree inference.
+- `tree/RAxML_bestTree.run`: the best-scoring ML tree of a thorough ML analysis.
+- `tree/RAxML_bipartitions.run`: the best-scoring ML tree with the BS support
+  values (from 0 to 100, when `--raxml_mode rbs`).
 
 ### Taxonomic classification 
 This step takes advantage of the MMseqs2 easy-taxonomy workflow to predict the
-taxonomy of each input genome. Before classification and for each genome,
-contigs are concatenated into a single pseudochromosome using the sequence
+taxonomy of each input genome. Before classification, for each genome contigs
+are concatenated into a single pseudochromosome using the sequence
 `NNNNNCATTCCATTCATTAATTAATTAATGAATGAATGNNNNN` as separator, which provides a
 stop codon and a start site in all six reading frames[^sagalactiae].
 
@@ -271,12 +277,14 @@ This step requires a MMseqs2 database augmented with taxonomic information (see
 [MMseqs2 database](mmseqs2-database)).
 
 #### Options
-- `skip_taxonomy`: skip the taxonomic classification
+- `--skip_taxonomy`: skip the taxonomic classification
 
 #### Outputs
+Main:
+- `taxonomy.tsv`: a single TSV file containing the classification summary
+Secondary:
 - `mmseqs`: directory containing the original MMseqs2 taxonomy files (including
   the Kraken style reports)
-- `taxonomy.tsv`: a single TSV file containing the classification summary
 
 ### Gene discovery/prediction
 Gene prediction is performed using the MetaEuk easy-predict workflow.  
@@ -284,7 +292,7 @@ Gene prediction is performed using the MetaEuk easy-predict workflow.
 This step requires a MMseqs2 database (see [MMseqs2 database](mmseqs2-database)).
 
 #### Options
-- `skip_genepred`: skip the gene prediction 
+- `--skip_genepred`: skip the gene prediction 
 
 #### Outputs
 - `metaeuk`: directory containing the original MetaEuk files (including the
@@ -292,102 +300,86 @@ This step requires a MMseqs2 database (see [MMseqs2 database](mmseqs2-database))
 
 ### MMseqs2 database
 The available databases are listed at
-  https://github.com/soedinglab/mmseqs2/wiki#downloading-databases (default
-  "UniProtKB/Swiss-Prot")
+https://github.com/soedinglab/mmseqs2/wiki#downloading-databases (default
+"UniProtKB/Swiss-Prot").
   
 #### Options
-- `mmseqs_db`: MMseqs2 database path (used by MMseqs2 and MetaEuk) (default
+- `--mmseqs_db`: MMseqs2 database path (used by MMseqs2 and MetaEuk) (default
   "none": download from Internet). See the `mmseqs_db_name` parameter.
-- `mmseqs_db_name`: MMseqs2 database name, used when mmseqs_db_path = "none".  
+- `--mmseqs_db_name`: MMseqs2 database name, used when mmseqs_db_path = "none".  
   
-### eggNOG
-- `skip_eggnog`: skip eggNOG annotation
-- `eggnog_db`: eggNOG v5.0 database dir. (default "none": download from
-  Internet)
-- `eggnog_db_mem`: store the eggNOG sqlite DB into memory (~44GB memory
+### EggNOG
+Translated CDS are functionally annotated using EggNOG-mapper against the
+eggNOG Orthologous Groups (OGs) database [^eggnog] v5.0. The
+eggNOG database integrates functional annotations collected from several
+sources, including Gene Ontology (GO) terms, KEGG functional orthologs and COG
+categories.
+
+#### Options
+- `--skip_eggnog`: skip EggNOG-mapper annotation.
+- `--eggnog_db`: eggNOG v5.0 database dir. (default "none": download from
+  Internet).
+- `--eggnog_db_mem`: store the eggNOG sqlite DB into memory (~44GB memory
   required) increasing the annotation speed.
+
+#### Outputs
+Main:
+- `eggnog_tables`: this folder contains the count matrix for each transferred
+  annotation.
+Secondary:
+- `eggnog`: directory containing the original EggNOG-mapper files.
 
 ### Resource limits
 - `--max_cpus`: maximum number of CPUs for each process (default `8`)
 - `--max_memory`: maximum memory for each process (default `240.GB`)
-- `--max_time`: maximum time for each process (default `120.h`)
+- `--max_time`: maximum time for each process (default `240.h`)
 
 See also [System requirements](https://metashot.github.io/#system-requirements).
-
-## Output
-The files and directories listed below will be created in the `results`
-directory after the pipeline has finished.
-
-
-
-### Taxonomy classification
-- `taxonomy.tsv`: summary of the taxonomic classification
-- `mmseqs`: directory containing the original MMseqs2 taxonomy files (including
-  the Kraken style reports)
-
-### Gene prediction
-- `metaeuk`: directory containing the original MetaEuk files (including the
-  protein sequences and the GFF files)
-
-### eggNOG 
-- `eggnog_*.tsv`: the count matrix for each transferred annotation
-- `eggnog`: directory containing the original eggNOG files
-
-
 
 ## System requirements
 Please refer to [System
 requirements](https://metashot.github.io/#system-requirements) for the complete
 list of system requirements options.
 
-### Memory
-Meta
-
-
-CheckM requires approximately 70 GB of memory. However, if you have only 16 GB
-RAM, a reduced genome tree (`--reduced_tree` option) can also be used (see
-https://github.com/Ecogenomics/CheckM/wiki/Installation#system-requirements).
-
-### Disk
-For each GB of input data the workflow requires approximately 0.5/1 GB for the
-final output and 2/3 GB for the working directory.
-
-
-mmseqs databases UniProtKB/Swiss-Prot outpath/swissprot tmp
-
 ## References
 
 [^busco]: Manni, Mosè, Matthew R. Berkeley, Mathieu Seppey, Felipe A. Simão, and
-    Evgeny M. Zdobnov. 2021. “BUSCO Update: Novel and Streamlined Workflows
+    Evgeny M. Zdobnov. 2021. "BUSCO Update: Novel and Streamlined Workflows
     along with Broader and Deeper Phylogenetic Coverage for Scoring of
-    Eukaryotic, Prokaryotic, and Viral Genomes.” Molecular Biology and Evolution
+    Eukaryotic, Prokaryotic, and Viral Genomes." Molecular Biology and Evolution
     38 (10): 4647–54.
 
 [^eggnog_mapper]: Cantalapiedra, Carlos P., Ana Hernández-Plaza, Ivica Letunic, Peer
-    Bork, and Jaime Huerta-Cepas. 2021. “eggNOG-Mapper v2: Functional
+    Bork, and Jaime Huerta-Cepas. 2021. "eggNOG-Mapper v2: Functional
     Annotation,Orthology Assignments, and Domain Prediction at the Metagenomic
-    Scale.” Molecular Biology and Evolution 38 (12): 5825–29.
+    Scale." Molecular Biology and Evolution 38 (12): 5825–29.
+
+[^eggnog]: Huerta-Cepas, Jaime, Damian Szklarczyk, Davide Heller, Ana
+    Hernández-Plaza, Sofia K. Forslund, Helen Cook, Daniel R. Mende, et al.
+    2019. "eggNOG 5.0: A Hierarchical, Functionally and Phylogenetically
+    Annotated Orthology Resource Based on 5090 Organisms and 2502 Viruses."
+    Nucleic Acids Research. https://doi.org/10.1093/nar/gky1085.
     
-[^muscle5]: Edgar, Robert C. 2022. “High-Accuracy Alignment Ensembles Enable
-    Unbiased Assessments of Sequence Homology and Phylogeny.” bioRxiv.
+[^muscle5]: Edgar, Robert C. 2022. "High-Accuracy Alignment Ensembles Enable
+    Unbiased Assessments of Sequence Homology and Phylogeny." bioRxiv.
     https://doi.org/10.1101/2021.06.20.449169.
 
 [^metaeuk]: Karin, Eli Levy, Milot Mirdita, and Johannes Söding. 2020.
-    “MetaEuk—sensitive, High-Throughput Gene Discovery, and Annotation for
-    Large-Scale Eukaryotic Metagenomics.” Microbiome.
+    "MetaEuk—sensitive, High-Throughput Gene Discovery, and Annotation for
+    Large-Scale Eukaryotic Metagenomics." Microbiome.
     https://doi.org/10.1186/s40168-020-00808-x.
 
 [^drep]: Olm, Matthew R., Christopher T. Brown, Brandon Brooks, and Jillian F.
-    Banfield. 2017. “dRep: A Tool for Fast and Accurate Genomic Comparisons That
-    Enables Improved Genome Recovery from Metagenomes through de-Replication.”
+    Banfield. 2017. "dRep: A Tool for Fast and Accurate Genomic Comparisons That
+    Enables Improved Genome Recovery from Metagenomes through de-Replication."
     The ISME Journal 11 (12): 2864–68.
 
-[^raxml]: Stamatakis, Alexandros. 2014. “RAxML Version 8: A Tool for
-    Phylogenetic Analysis and Post-Analysis of Large Phylogenies.”
+[^raxml]: Stamatakis, Alexandros. 2014. "RAxML Version 8: A Tool for
+    Phylogenetic Analysis and Post-Analysis of Large Phylogenies."
     Bioinformatics 30 (9): 1312–13.
     
-[^mmseqs2]: Steinegger, Martin, and Johannes Söding. “MMseqs2 Enables Sensitive
-    Protein Sequence Searching for the Analysis of Massive Data Sets.” Nature
+[^mmseqs2]: Steinegger, Martin, and Johannes Söding. "MMseqs2 Enables Sensitive
+    Protein Sequence Searching for the Analysis of Massive Data Sets." Nature
     Biotechnology 35 (11): 1026–28.
 
 [^gtdb_arc]: Rinke, C., Chuvochina, M., Mussig, A.J. et al. *A standardized
