@@ -29,17 +29,18 @@ editing.
   - [Phylogenetic tree inference (requires MSA)](#phylogenetic-tree-inference-requires-msa)
   - [Taxonomic classification](#taxonomic-classification)
   - [Gene discovery/prediction](#gene-discoveryprediction)
-  - [MMseqs2 database](#mmseqs2-database)
+  - [The MMseqs2 database](#the-mmseqs2-database)
   - [EggNOG](#eggnog)
+  - [ITSx](#itsx)
   - [Resource limits](#resource-limits)
 - [System requirements](#system-requirements)
 - [References](#references)
 
 ## Main features
 aweMAGs is a container-enabled [Nextflow](https://www.nextflow.io/) pipeline for
-an automated quality assessment, dereplication, gene discovery, taxonomic and functional
-annotation of eukariotic genomes/MAGs. It can run out-of-the-box on any platform that
-supports Nextflow, [Docker](https://www.docker.com/) or
+an automated quality assessment, dereplication, gene discovery, taxonomic and
+functional annotation of eukariotic genomes/MAGs. It can run out-of-the-box on
+any platform that supports Nextflow, [Docker](https://www.docker.com/) or
 [Singularity](https://sylabs.io/singularity), including computing clusters or
 batch infrastructures in the cloud. Main features:
 
@@ -56,7 +57,8 @@ batch infrastructures in the cloud. Main features:
   [MetaEuk](https://github.com/soedinglab/metaeuk)[^metaeuk];
 - Fast functional annotation using
   [EggNOG-mapper](https://github.com/eggnogdb/eggnog-mapper)[^eggnog_mapper];
-- Internal transcriber spacers extraction using ITSx
+- Internal transcriber spacers extraction using
+  [ITSx](https://microbiology.se/software/itsx/)[^itsx];
 - Automatic download of databases;
 - Summary tables for genome quality, taxonomy predictions and functional
   annotations.
@@ -132,6 +134,7 @@ Options and default values are decladed in [`nextflow.config`](nextflow.config).
 - `--genomes`: input genomes/bins in FASTA format (default `"data/*.fa"`).
 - `--outdir`: output directory (default `"results"`).
 
+
 ### Quality assessment
 Quality assessment is performed for each input genome/metagenomic bin using
 BUSCO v5 and the BBTools's statswrapper program.
@@ -146,12 +149,11 @@ BUSCO v5 and the BBTools's statswrapper program.
   - a path (e.g. `"/home/user/fungi_odb10"`) .
 
 #### Outputs
-Main:
 - `quality.tsv`: summary of genomes quality (including completeness,
   contamination, N50 ...).
-Secondary:
 - `busco`: main BUSCO's original output files.
 - `statswrapper`: original BBTools's statswrapper output.
+
 
 ### Genomes filtering
 This step discards sequences that do not meet the filtering
@@ -170,6 +172,7 @@ This step discards sequences that do not meet the filtering
 #### Outputs
 - `filtered`: this folder contains the genomes filtered according to
   `--min_completeness` and `--max_contamination` options.
+
 
 ### Dereplication
 In this step, input genomes will be clustered using a defined average nucleotide
@@ -194,14 +197,13 @@ input genomes will be analyzed and the following formula will be used:
 - `--min_overlap`: minimum overlap fraction between genomes (default 0.3).
 
 #### Outputs
-Main:
 - `derep_info.tsv`: dereplication summary, a TSV file containing three columns:
   - Genome: genome filename
   - Cluster: the cluster ID (from 0 to N-1)
   - Representative: is this genome the cluster representative?
 - `representatives`: this folder contains the representative genomes
-Secondary:
 - `drep`: original data tables, figures and log of dRep.
+
 
 ### Single-copy genes (SCG) MSA
 When the BUSCO auto-lineage search is deactivaded (e.g. `--lineage fungi` and
@@ -214,6 +216,7 @@ BUSCO will be aligned using MUSCLE v5.
 #### Outputs
 - `sgc/faa`: this folder contains the single-copy genes (one SCG per FASTA file)
 - `sgc/msa`: contains the MSA for each SCG
+
 
 ### Phylogenetic tree inference (requires MSA)
 For each SCG MSA, columns represented in <50% of the genomes or columns with
@@ -243,7 +246,6 @@ inferred using RAxML. Two modes are available for RAxML:
   ```bash
   -f a -m PROTGAMMAWAG -N [RAXML_NBOOT] -p 42 -x 43
   ```
-
 #### Options
 - `--skip_tree` skip phylogenetic tree inference.
 - `--max_ncols`: maximum number of MSA columns (taken randomly) for tree
@@ -266,6 +268,7 @@ inferred using RAxML. Two modes are available for RAxML:
 - `tree/RAxML_bipartitions.run`: the best-scoring ML tree with the BS support
   values (from 0 to 100, when `--raxml_mode rbs`).
 
+
 ### Taxonomic classification 
 This step takes advantage of the MMseqs2 easy-taxonomy workflow to predict the
 taxonomy of each input genome. Before classification, for each genome contigs
@@ -280,11 +283,10 @@ This step requires a MMseqs2 database augmented with taxonomic information (see
 - `--skip_taxonomy`: skip the taxonomic classification
 
 #### Outputs
-Main:
 - `taxonomy.tsv`: a single TSV file containing the classification summary
-Secondary:
 - `mmseqs`: directory containing the original MMseqs2 taxonomy files (including
   the Kraken style reports)
+
 
 ### Gene discovery/prediction
 Gene prediction is performed using the MetaEuk easy-predict workflow.  
@@ -298,7 +300,8 @@ This step requires a MMseqs2 database (see [MMseqs2 database](mmseqs2-database))
 - `metaeuk`: directory containing the original MetaEuk files (including the
   predicted protein sequences and the GFF files)
 
-### MMseqs2 database
+
+### The MMseqs2 database
 The available databases are listed at
 https://github.com/soedinglab/mmseqs2/wiki#downloading-databases (default
 "UniProtKB/Swiss-Prot").
@@ -308,6 +311,7 @@ https://github.com/soedinglab/mmseqs2/wiki#downloading-databases (default
   "none": download from Internet). See the `mmseqs_db_name` parameter.
 - `--mmseqs_db_name`: MMseqs2 database name, used when mmseqs_db_path = "none".  
   
+
 ### EggNOG
 Translated CDS are functionally annotated using EggNOG-mapper against the
 eggNOG Orthologous Groups (OGs) database [^eggnog] v5.0. The
@@ -323,11 +327,20 @@ categories.
   required) increasing the annotation speed.
 
 #### Outputs
-Main:
 - `eggnog_tables`: this folder contains the count matrix for each transferred
   annotation.
-Secondary:
 - `eggnog`: directory containing the original EggNOG-mapper files.
+
+
+### ITSx
+ITS1, 5.8S and ITS2 – as well as full-length ITS sequences
+
+#### Options
+- `--skip_itsx`: skip ITSx.
+
+#### Outputs
+- `itsx`: ITSx output for each input genome.
+
 
 ### Resource limits
 - `--max_cpus`: maximum number of CPUs for each process (default `8`)
@@ -387,17 +400,24 @@ list of system requirements options.
       946–959 (2021). https://doi.org/10.1038/s41564-021-00918-8
 
 [^raxml_search]: Stamatakis A., Blagojevic F., Nikolopoulos D.S. et al.
-      *Exploring New Search Algorithms and Hardware for Phylogenetics: RAxML
-      Meets the IBM* Cell. J VLSI Sign Process Syst Sign Im 48, 271–286 (2007).
-      [Link](https://doi.org/10.1007/s11265-007-0067-4).
+    *Exploring New Search Algorithms and Hardware for Phylogenetics: RAxML Meets
+    the IBM* Cell. J VLSI Sign Process Syst Sign Im 48, 271–286 (2007).
+    [Link](https://doi.org/10.1007/s11265-007-0067-4).
 
 [^raxml_bootstrap]: Stamatakis A., Hoover P., Rougemont J. *A Rapid Bootstrap
-      Algorithm for the RAxML Web Servers*. Systematic Biology, Volume 57, Issue
-      5, October 2008, Pages 758–771,
-      [Link](https://doi.org/10.1080/10635150802429642).
+    Algorithm for the RAxML Web Servers*. Systematic Biology, Volume 57, Issue
+    5, October 2008, Pages 758–771,
+    [Link](https://doi.org/10.1080/10635150802429642).
 
-[^sagalactiae]: Tettelin, Hervé, et al. *Genome analysis of multiple pathogenic isolates
-      of Streptococcus agalactiae: implications for the microbial "pan-genome".*
-      Proceedings of the National Academy of Sciences 102.39 (2005):
-      13950-13955. https://www.pnas.org/doi/10.1073/pnas.0506758102
+[^sagalactiae]: Tettelin, Hervé, et al. *Genome analysis of multiple pathogenic
+    isolates of Streptococcus agalactiae: implications for the microbial
+    "pan-genome".* Proceedings of the National Academy of Sciences 102.39
+    (2005): 13950-13955. https://www.pnas.org/doi/10.1073/pnas.0506758102
+
+[^itsx]: Bengtsson-Palme, Johan, Martin Ryberg, Martin Hartmann, Sara Branco,
+    Zheng Wang, Anna Godhe, Pierre De Wit, et al. 2013. “Improved Software
+    Detection and Extraction of ITS1 and ITS2 from Ribosomal ITS Sequences of
+    Fungi and Other Eukaryotes for Analysis of Environmental Sequencing Data.”
+    Methods in Ecology and Evolution. https://doi.org/10.1111/2041-210x.12073.
+
 
