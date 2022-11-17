@@ -353,22 +353,23 @@ Please refer to [System
 requirements](https://metashot.github.io/#system-requirements) for the complete
 list of system requirements options.
 
+
 [^busco]: Manni, Mosè, Matthew R. Berkeley, Mathieu Seppey, Felipe A. Simão, and
     Evgeny M. Zdobnov. 2021. "BUSCO Update: Novel and Streamlined Workflows
     along with Broader and Deeper Phylogenetic Coverage for Scoring of
     Eukaryotic, Prokaryotic, and Viral Genomes." Molecular Biology and Evolution
     38 (10): 4647–54.
 
-[^eggnog_mapper]: Cantalapiedra, Carlos P., Ana Hernández-Plaza, Ivica Letunic, Peer
-    Bork, and Jaime Huerta-Cepas. 2021. "eggNOG-Mapper v2: Functional
+[^eggnog_mapper]: Cantalapiedra, Carlos P., Ana Hernández-Plaza, Ivica Letunic,
+    Peer Bork, and Jaime Huerta-Cepas. 2021. "eggNOG-Mapper v2: Functional
     Annotation,Orthology Assignments, and Domain Prediction at the Metagenomic
     Scale." Molecular Biology and Evolution 38 (12): 5825–29.
 
 [^eggnog]: Huerta-Cepas, Jaime, Damian Szklarczyk, Davide Heller, Ana
     Hernández-Plaza, Sofia K. Forslund, Helen Cook, Daniel R. Mende, et al.
-    1.    "eggNOG 5.0: A Hierarchical, Functionally and Phylogenetically
-    Annotated Orthology Resource Based on 5090 Organisms and 2502 Viruses."
-    Nucleic Acids Research. https://doi.org/10.1093/nar/gky1085.
+    "eggNOG 5.0: A Hierarchical, Functionally and Phylogenetically Annotated
+    Orthology Resource Based on 5090 Organisms and 2502 Viruses." Nucleic Acids
+    Research. https://doi.org/10.1093/nar/gky1085.
     
 [^muscle5]: Edgar, Robert C. 2022. "High-Accuracy Alignment Ensembles Enable
     Unbiased Assessments of Sequence Homology and Phylogeny." bioRxiv.
@@ -393,8 +394,8 @@ list of system requirements options.
     Biotechnology 35 (11): 1026–28.
 
 [^gtdb_arc]: Rinke, C., Chuvochina, M., Mussig, A.J. et al. *A standardized
-      archaeal taxonomy for the Genome Taxonomy Database*. Nat Microbiol 6,
-      946–959 (2021). https://doi.org/10.1038/s41564-021-00918-8
+    archaeal taxonomy for the Genome Taxonomy Database*. Nat Microbiol 6,
+    946–959 (2021). https://doi.org/10.1038/s41564-021-00918-8
 
 [^raxml_search]: Stamatakis A., Blagojevic F., Nikolopoulos D.S. et al.
     *Exploring New Search Algorithms and Hardware for Phylogenetics: RAxML Meets
@@ -412,9 +413,9 @@ list of system requirements options.
     (2005): 13950-13955. https://www.pnas.org/doi/10.1073/pnas.0506758102
 
 [^itsx]: Bengtsson-Palme, Johan, Martin Ryberg, Martin Hartmann, Sara Branco,
-    Zheng Wang, Anna Godhe, Pierre De Wit, et al. 2013. “Improved Software
+    Zheng Wang, Anna Godhe, Pierre De Wit, et al. 2013. "Improved Software
     Detection and Extraction of ITS1 and ITS2 from Ribosomal ITS Sequences of
-    Fungi and Other Eukaryotes for Analysis of Environmental Sequencing Data.”
+    Fungi and Other Eukaryotes for Analysis of Environmental Sequencing Data."
     Methods in Ecology and Evolution. https://doi.org/10.1111/2041-210x.12073.
 
 
