@@ -34,12 +34,11 @@ editing.
   - [ITSx](#itsx)
   - [Resource limits](#resource-limits)
 - [System requirements](#system-requirements)
-- [References](#references)
 
 ## Main features
 aweMAGs is a container-enabled [Nextflow](https://www.nextflow.io/) pipeline for
 an automated quality assessment, dereplication, gene discovery, taxonomic and
-functional annotation of eukariotic genomes/MAGs. It can run out-of-the-box on
+functional annotation of **eukariotic genomes/MAGs**. It can run out-of-the-box on
 any platform that supports Nextflow, [Docker](https://www.docker.com/) or
 [Singularity](https://sylabs.io/singularity), including computing clusters or
 batch infrastructures in the cloud. Main features:
@@ -333,7 +332,7 @@ categories.
 
 
 ### ITSx
-ITS1, 5.8S and ITS2 – as well as full-length ITS sequences
+Extract ITS1, 5.8S and ITS2 regions, as well as full-length ITS sequences.
 
 #### Options
 - `--skip_itsx`: skip ITSx.
@@ -354,8 +353,6 @@ Please refer to [System
 requirements](https://metashot.github.io/#system-requirements) for the complete
 list of system requirements options.
 
-## References
-
 [^busco]: Manni, Mosè, Matthew R. Berkeley, Mathieu Seppey, Felipe A. Simão, and
     Evgeny M. Zdobnov. 2021. "BUSCO Update: Novel and Streamlined Workflows
     along with Broader and Deeper Phylogenetic Coverage for Scoring of
@@ -369,7 +366,7 @@ list of system requirements options.
 
 [^eggnog]: Huerta-Cepas, Jaime, Damian Szklarczyk, Davide Heller, Ana
     Hernández-Plaza, Sofia K. Forslund, Helen Cook, Daniel R. Mende, et al.
-    2019. "eggNOG 5.0: A Hierarchical, Functionally and Phylogenetically
+    1.    "eggNOG 5.0: A Hierarchical, Functionally and Phylogenetically
     Annotated Orthology Resource Based on 5090 Organisms and 2502 Viruses."
     Nucleic Acids Research. https://doi.org/10.1093/nar/gky1085.
     
