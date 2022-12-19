@@ -220,9 +220,9 @@ For each SCG MSA, columns represented in <50% of the genomes or columns with
 less than 25% or more than 95% amino acid consensus are trimmed in order to
 remove sites with weak phylogenetic signals[^gtdb_arc]. To reduce total number of
 columns selected for tree inference, the alignment was further trimmed by
-randomly selecting `floor( MAX_NCOLS / N_GENOMES )` columns, where `MAX_NCOLS`
+randomly selecting `floor( MAX_NCOLS / N_SGC )` columns, where `MAX_NCOLS`
 is the maximum number of columns for the final MSA (parameter `--max_ncols`,
-default 5000) and `N_GENOMES` is the total number of the input genomes. Finally,
+default 5000) and `N_SGC` is the total number of BUSCO SGC for the specified lineage. Finally,
 the trimmed MSAs are concatenated into a single MSA and the phylogenomic tree is
 inferred using RAxML. Two modes are available for RAxML:
 
