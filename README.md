@@ -1,5 +1,3 @@
-**metashot/aweMAGs is currently under development!**
-
 metashot/aweMAGs is an automated workflow for **large-scale microbial eukaryotic
 MAGs** (metagenome assembled genomes) analysis. Although aweMAGs has been
 specifically designed for eukaryotic genomes, it can also work on prokaryotic or
