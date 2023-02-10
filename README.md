@@ -5,16 +5,17 @@ viral MAGs.
 
 **Reproducibility** is guaranteed by Nextflow and versioned Docker images.
 
-Please cite: aweMAGs: a fully automated workflow for quality assessment and annotation of eukaryotic genomes from metagenomes
-Davide Albanese, Claudia Coleine, Laura Selbmann, Claudio Donati
-bioRxiv 2023.02.08.527609; doi: https://doi.org/10.1101/2023.02.08.527609
-
 **Note**: This workflow is not intended for classifying and annotating
 "finished" SAGs (single amplified genomes) or MAGs. The "finished" category is
 reserved for genomes that can be assembled with extensive manual review and
 editing.
 
 [MetaShot Home](https://metashot.github.io/)
+
+### Please cite
+Davide Albanese, Claudia Coleine, Laura Selbmann, Claudio Donati. 
+*aweMAGs: a fully automated workflow for quality assessment and annotation of eukaryotic genomes from metagenomes*.
+bioRxiv 2023.02.08.527609; doi: https://doi.org/10.1101/2023.02.08.527609
 
 **Table of contents**
 
