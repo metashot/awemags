@@ -1,5 +1,3 @@
-**metashot/aweMAGs is currently under development!**
-
 metashot/aweMAGs is an automated workflow for **large-scale microbial eukaryotic
 MAGs** (metagenome assembled genomes) analysis. Although aweMAGs has been
 specifically designed for eukaryotic genomes, it can also work on prokaryotic or
@@ -13,6 +11,11 @@ reserved for genomes that can be assembled with extensive manual review and
 editing.
 
 [MetaShot Home](https://metashot.github.io/)
+
+### Please cite
+Davide Albanese, Claudia Coleine, Laura Selbmann, Claudio Donati. 
+*aweMAGs: a fully automated workflow for quality assessment and annotation of eukaryotic genomes from metagenomes*.
+bioRxiv 2023.02.08.527609; doi: https://doi.org/10.1101/2023.02.08.527609
 
 **Table of contents**
 
@@ -222,9 +225,9 @@ For each SCG MSA, columns represented in <50% of the genomes or columns with
 less than 25% or more than 95% amino acid consensus are trimmed in order to
 remove sites with weak phylogenetic signals[^gtdb_arc]. To reduce total number of
 columns selected for tree inference, the alignment was further trimmed by
-randomly selecting `floor( MAX_NCOLS / N_GENOMES )` columns, where `MAX_NCOLS`
+randomly selecting `floor( MAX_NCOLS / N_SGC )` columns, where `MAX_NCOLS`
 is the maximum number of columns for the final MSA (parameter `--max_ncols`,
-default 5000) and `N_GENOMES` is the total number of the input genomes. Finally,
+default 5000) and `N_SGC` is the total number of BUSCO SGC for the specified lineage. Finally,
 the trimmed MSAs are concatenated into a single MSA and the phylogenomic tree is
 inferred using RAxML. Two modes are available for RAxML:
 
